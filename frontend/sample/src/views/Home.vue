@@ -1,18 +1,87 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Dashboard</h1>
+    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
+
+    <div style="background: #ECECEC; padding: 60px">
+      <a-row :gutter="16" type="flex" justify="start">
+        <a-col :xs="{ span: 5, offset: 0.5 }" :lg="{ span: 6, offset: 1 }">
+          <div>
+              <a-card title="Number of Templates" class="grid-Width" bordered = "false" style="width: 400px">
+                <!-- <a-statistic
+                  title="Feedback"
+                  :value="11.28"
+                  :precision="2"
+                  suffix="%"
+                  :valueStyle="{color: '#3f8600'}"
+                  style="margin-right: 50px"
+                >
+                <template v-slot:prefix>
+                  <a-icon type="arrow-up" />
+                </template>
+                </a-statistic> -->
+                <p>card content</p>
+                <p>card content</p>
+                <p>card content</p>
+              </a-card>
+          </div>
+          <br>
+          <div>
+              <a-card title="PV for Templates Used" class="grid-Width" bordered = "false" style="width: 400px">
+                <p>card content</p>
+                <p>card content</p>
+                <p>card content</p>
+              </a-card>
+          </div>
+        </a-col>
+        <a-col :xs="{ span: 5, offset: 0.5 }" :lg="{ span: 6, offset: 1 }">
+          <div>
+              <a-card title="UV for Templates used" class="grid-Width" bordered = "false" style="width: 400px">
+                <p>card content</p>
+                <p>card content</p>
+                <p>card content</p>
+              </a-card>
+          </div>
+          <br>
+          <div>
+              <a-card title="New Templates from Last 7 Days" class="grid-Width" bordered = "false" style="width: 400px">
+                <p>card content</p>
+                <p>card content</p>
+                <p>card content</p>
+              </a-card>
+          </div>
+        </a-col>
+        <a-col :xs="{ span: 5, offset: 1 }" :lg="{ span: 6, offset: 2 }">
+          <a-card title="Top 10 Templates" class="grid-a-Width" bordered = "false" style="width: 300px">
+            <p>card content</p>
+            <p>card content</p>
+            <p>card content</p>
+          </a-card>
+        </a-col>
+      </a-row>                
+    </div>
   </div>
+
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
+<style scoped>
+  .grid-Width {    
+    background-color: rgb(163, 167, 166);
+    border-radius: 4px;
+    min-height: 100px;
   }
-}
+  .grid-a-Width {    
+    background-color: rgb(81, 145, 131);
+    border-radius: 4px;
+    min-height: 220px;
+  }
+</style>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+
+
+
+export default class Home extends Vue {}
 </script>
