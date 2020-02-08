@@ -1,13 +1,13 @@
 version: '3'
 
 services: 
-  sample_region:
-    container_name: sample_region
-    build: region_server
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./worker:/usr/src
+#  sample_region:
+    #container_name: sample_region
+    #build: region_server
+    #stdin_open: true
+    #tty: true
+    #volumes:
+      #- ./worker:/usr/src
 
   rabbit_mq:
     container_name: rabbit_mq
