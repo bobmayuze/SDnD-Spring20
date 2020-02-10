@@ -11,3 +11,4 @@ app.config_from_object(config)
 def add(x, y):
     time.sleep(5)
     return x + y
+    
