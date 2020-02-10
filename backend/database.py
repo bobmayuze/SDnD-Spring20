@@ -10,7 +10,7 @@ class Database(object):
     # set client to be the mongodb
     def __init__(self):
         self.client = pymongo.MongoClient(
-            "mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=scicatDB",
+                "mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB",
             connect=False)
 
     '''
@@ -19,7 +19,7 @@ class Database(object):
     '''
 
     def get_regions(self):
-        db = self.client['scicatDB']
+        db = self.client['TMS_DB']
         db = db['regions']
         docs = db.find({})
         toReturn = []
@@ -32,7 +32,7 @@ class Database(object):
         return json.dumps(toReturn)
 
     def get_templates(self):
-        db = self.client['scicatDB']
+        db = self.client['TMS_DB']
         db = db['templates']
 
         df = pd.DataFrame(list(db.find(
