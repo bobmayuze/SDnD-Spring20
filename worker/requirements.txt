@@ -1,0 +1,7 @@
+pandas==0.23.4
+joblib
+sklearn
+celery==4.1.0
+kombu==4.1.0
+requests
+pymongo
