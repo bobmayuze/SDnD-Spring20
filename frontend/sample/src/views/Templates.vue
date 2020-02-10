@@ -119,7 +119,6 @@ export default {
         console.log(data);
         this.loading = false;
         this.data = data;
-        // this.pagination = pagination;
       });      
 
     }
