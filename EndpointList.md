@@ -29,7 +29,7 @@ application/json
 ```
 
 ## PUT /templates
-Create a tempalte. If template_id is specified, it will be used on creating a new version for that template.
+Create a template. If template_id is specified, it will be used on creating a new version for that template.
 
 ### Request
 #### Header
