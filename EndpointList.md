@@ -1,7 +1,7 @@
 # Templates
 
 ## GET /templates
-Get template by template_id, but if not provided, will return all templates instead
+Get template by template_id, but if not provided, will return all templates instead. However, if key word is provieded as a string, it will return all templates that contains that string.
 ### Request
 #### Header
 ```
@@ -11,7 +11,8 @@ application/json
 #### Params
 ```json
 {
-    "template_id" : SOME_OBJECT_ID
+    (optional)"template_id" : SOME_OBJECT_ID,
+    (optional)"key_word" : SOME_KEY_WORD
 }
 ```
 
@@ -57,39 +58,6 @@ application/json
     "message" : "success"
 }
 ```
-
-
-
-
-## POST /tempaltes
-search template by name
-
-### Request
-#### Header
-```
-application/json
-```
-#### Body
-```json
-{
-    "key" : "Tem"
-}
-```
-
-### Response
-#### Header
-```
-application/json
-```
-#### Body
-```json
-{
-    "result" : templates[]
-}
-```
-
-
-
 
 
 
