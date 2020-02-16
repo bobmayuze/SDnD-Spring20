@@ -27,7 +27,7 @@ application/json
 }
 ```
 
-## PUT /tempaltes
+## PUT /templates
 Create a tempalte. If template_id is specified, it will be used on creating a new version for that template.
 
 ### Request
@@ -61,7 +61,7 @@ application/json
 
 
 
-## POST /tempaltes
+## POST /templates
 search template by name
 
 ### Request
