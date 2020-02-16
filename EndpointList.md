@@ -165,10 +165,12 @@ application/json
 ```
 
 #### Body
+```json
 {
-    "template_id" : SOME_OBJECT_ID
+    "template_id" : SOME_OBJECT_ID,
     "region" : REGION_NAME
 }
+```
 
 ### Response
 #### Header
