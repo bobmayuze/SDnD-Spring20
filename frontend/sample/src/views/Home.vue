@@ -4,10 +4,10 @@
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
 
     <div style="background: #ECECEC; padding: 60px">
-      <a-row :gutter="16" type="flex" justify="start">
+      <a-row :gutter="64" type="flex" justify="start">
         <a-col :xs="{ span: 4, offset: 0 }" :lg="{ span: 8, offset: 0 }">
           <div>
-            <v-chart :width="width" :height="height" :data="data" :scale="scale">
+            <v-chart :forceFit="true" :height="height" :data="data" :scale="scale">
               <v-tooltip />
               <v-axis />
               <v-legend />
@@ -16,7 +16,7 @@
           </div>
           <br>
           <div>
-            <v-chart :width="width" :height="height" :data="data2" :scale="scale2">
+            <v-chart :forceFit="true" :height="height" :data="data2" :scale="scale2">
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
@@ -27,7 +27,7 @@
         </a-col>
         <a-col :xs="{ span: 4, offset: 0 }" :lg="{ span: 8, offset: 0 }">
           <div>
-            <v-chart :width="width" :height="height" :data="data5" :scale="scale5">
+            <v-chart :forceFit="true" :height="height" :data="data5" :scale="scale5">
               <v-tooltip />
               <v-axis />
               <v-legend />
@@ -37,7 +37,7 @@
           </div>
           <br>
           <div>
-            <v-chart :width="width" :height="height" :data="expectData">
+            <v-chart :forceFit="true" :height="height" :data="expectData">
               <v-tooltip :showTitle="false" :itemTpl="tooltipOpts.itemTpl" />
               <v-coord type="rect" direction="LT" />
               <v-pyramid :position="pyramidOpts.position" :color="pyramidOpts.color"
@@ -52,7 +52,7 @@
           </div>
         </a-col>
         <a-col :xs="{ span: 4, offset: 0.5 }" :lg="{ span: 6, offset: 1 }">
-            <v-chart :width="width" :height="height2" :data="data3">
+            <v-chart :forceFit="true" :height="height2" :data="data3">
               <v-tooltip />
               <v-axis />
               <v-legend />
@@ -260,7 +260,7 @@ export default {
       actualData,
       height: 400,
       height2: 800,
-      width: 500,
+      width: 350,
       tooltipOpts,
       pyramidOpts,
       pyramidOpts1,
