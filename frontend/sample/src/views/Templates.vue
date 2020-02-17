@@ -2,8 +2,6 @@
   <div class="Templates">
     <h1>Templates</h1>
 
-
-
     <a-button @click="new_template()" type="primary">New Template</a-button>
     
     <a-table 
@@ -40,8 +38,6 @@
     </a-table>
     
   </div>
-
-
 </template>
 
 
