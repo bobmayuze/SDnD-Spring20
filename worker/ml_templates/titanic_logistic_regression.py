@@ -10,6 +10,9 @@ import numpy as np
 import pandas as pd 
 # Algorithms
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
 
 def train_model(
         test_data='titanic_test.csv', 
@@ -62,14 +65,13 @@ def train_model(
     # In[9]:
 
 
-    from sklearn.model_selection import train_test_split
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 101)
 
 
     # In[10]:
 
 
-    from sklearn.linear_model import LogisticRegression
     logmodel = LogisticRegression(solver='newton-cg')
     logmodel.fit(X_train,y_train)
 

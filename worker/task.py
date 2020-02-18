@@ -14,5 +14,5 @@ def add(x, y):
     time.sleep(5)
     return x + y
 
-
-print(ml_templates.train_model('./ml_templates/titanic_test.csv','./ml_templates/titanic_train.csv'))
+def runModel():
+    print(ml_templates.train_model('./ml_templates/titanic_test.csv','./ml_templates/titanic_train.csv'))
