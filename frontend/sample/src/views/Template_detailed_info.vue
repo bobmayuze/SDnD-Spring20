@@ -95,7 +95,11 @@ export default {
     },
     data() {
         return {
-            template_info : 'SOME INFO'
+            template_info : 'SOME INFO',
+            formItemLayout: {
+                labelCol: { span: 6 },
+                wrapperCol: { span: 14 },
+            },       
         }
     },
     methods : {
@@ -111,8 +115,10 @@ export default {
             .catch(function (error) {
                 console.log(error);
             });         
-            
-            
+
+        },
+        buttonClieked(){
+            console.log('Clicked');
         }
     }
 }
