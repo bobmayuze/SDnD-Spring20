@@ -3,10 +3,10 @@
     <h1>Dashboard</h1>
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
 
-    <div style="background: #ECECEC; padding: 60px">
+    <div style="background: #fffff; padding: 60px">
       <a-row :gutter="64" type="flex" justify="start">
         <a-col :xs="{ span: 4, offset: 0 }" :lg="{ span: 6, offset: 0 }">
-          <v-chart :forceFit="true" :height="heightTop10" :data="dataTop10">
+          <v-chart :forceFit="true" :height="650" :data="dataTop10">
             <v-coord type="rect" direction="LT" />
             <v-tooltip />
             <v-legend />
@@ -17,7 +17,7 @@
         </a-col>
         <a-col :xs="{ span: 4, offset: 0 }" :lg="{ span: 8, offset: 0 }">
           <div>
-            <v-chart :forceFit="true" :height="heightNum" :data="dataNum" :scale="scaleNum">
+            <v-chart :width="400" :height="300" :data="dataNum" :scale="scaleNum">
               <v-tooltip />
               <v-axis />
               <v-legend />
@@ -27,7 +27,7 @@
           </div>
           <br>
             <div>
-              <v-chart :force-fit="true" :height="heightPU" :data="dataPU" :scale="scalePU">
+              <v-chart :width="400" :height="300" :data="dataPU" :scale="scalePU">
                 <v-tooltip />
                 <v-axis />
                 <v-legend />
@@ -38,7 +38,7 @@
         </a-col>
         <a-col :xs="{ span: 4, offset: 0 }" :lg="{ span: 8, offset: 0 }">
           <div>
-            <v-chart :force-fit="true" :height="heightPU" :data="dataPU" :scale="scalePU">
+            <v-chart :width="400" :height="300" :data="dataPU" :scale="scalePU">
               <v-tooltip />
               <v-axis />
               <v-legend />
@@ -48,7 +48,7 @@
           </div>
           <br>
           <div>
-            <v-chart :forceFit="true" :height="height7" :data="data7" :scale="scale7">
+            <v-chart :width="400" :height="300" :data="data7" :scale="scale7">
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
