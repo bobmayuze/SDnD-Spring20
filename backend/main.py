@@ -32,9 +32,9 @@ def get_template():
 @app.route("/templates", methods=["PUT"])
 def create_template():
     f = request.files["files"]
-    name = request.args.get("name")
+    name = request.form.get("name")
     filename = f.filename
-    description = request.args.get("description")
+    description = request.form.get("description")
     tags = request.args.get("tags")
     
     result = db.create_template(name, filename, tags, description)

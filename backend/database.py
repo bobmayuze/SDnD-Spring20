@@ -68,12 +68,11 @@ class Database(object):
         db = db['templates']
 
         record = db.find_one({'_id': ObjectId(unique_id)})
-
         record['_id'] = str(record['_id'])
         record['origin_id'] = str(record['origin_id'])
         record['created_at'] = str(record['created_at'])
 
-        return record
+        return json.dumps(record)
 
     def create_template(self, name, file_name, tags, description):
         db = self.client['TMS_DB']
