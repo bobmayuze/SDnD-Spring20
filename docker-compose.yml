@@ -1,9 +1,9 @@
 version: '3'
 
 services: 
-  sample_region:
+  worker:
     container_name: sample_region
-    build: region_server
+    build: worker
     stdin_open: true
     tty: true
     volumes:
