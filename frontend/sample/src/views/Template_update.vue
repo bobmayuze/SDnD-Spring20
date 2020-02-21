@@ -104,6 +104,76 @@ export default {
         }
       });
     },
+    normFile(e) {
+      console.log('Upload event:', e);
+      if (Array.isArray(e)) {
+        return e;
+      }
+      return e && e.fileList;
+    },
+
+    handleRemove(file) {
+      const index = this.fileList.indexOf(file);
+      const newFileList = this.fileList.slice();
+      newFileList.splice(index, 1);
+      this.fileList = newFileList;
+    },
+
+    beforeUpload(file) {
+      this.fileList = [...this.fileList, file];
+      console.log(this.fileList);
+      console.log(file);
+      
+      return false;
+    },
+
+    handleUpload() {
+      let { fileList } = this;
+      let formData = new FormData();
+      fileList.forEach(file => {
+        formData.append('files[]', file);
+      });
+      this.uploading = true;
+      // formData.append('username', 'Chris');
+
+
+      this.form.validateFields((err, values) => {
+        formData.append('description', values.template_desc);
+        formData.append('name', values.template_name);
+        formData.append('key_words', values.template_tags);
+        formData.append('template_id', this.$route.query.template_id);
+
+      });      
+
+      // Display the key/value pairs
+      for (var pair of formData.entries()) {
+          console.log(pair[0]+ ', ' + pair[1]); 
+      }        
+
+      // You can use any AJAX library you like
+      reqwest({
+        url: 'http://localhost:5000/update_template',
+        method: 'post',
+        processData: false,
+        data: formData,
+        success: () => {
+          this.fileList = [];
+          this.uploading = false;
+          this.$notification.open({
+            message: 'Template Updated',
+            description: 'Template successfully updated',
+            icon: <a-icon type="smile" style="color: #52c41a" />,
+          });          
+          this.$router.push({
+            path: `/templates`
+          })
+        },
+        error: () => {
+          this.uploading = false;
+          this.$message.error('upload failed.');
+        },
+      });
+    },
   },
 };
 </script>
