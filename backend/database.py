@@ -78,9 +78,8 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
 
-        record = db.find({'origin_id': origin_id})
         ret_list = []
-        for x in db.find({'origin_id': origin_id}):
+        for x in db.find({'origin_id': ObjectId(origin_id)}):
             ret_list.append(x)
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
@@ -113,6 +112,6 @@ class Database(object):
                 {
                     '_id': ObjectId(create_result.inserted_id)
                 }, {'$set': {
-                    'origin_id': origin_id
+                    'origin_id': ObjectId(origin_id)
                 }})
         return update_result

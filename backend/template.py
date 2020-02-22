@@ -7,7 +7,7 @@ class Template(object):
         self.tags = tags
         self.description = "Just another template."
         self.is_activated = True
-        self.is_deleted = True
+        self.is_deleted = False
         self.origin_id = None
         self.versions = None
         self.db = Database()
