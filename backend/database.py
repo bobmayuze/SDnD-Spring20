@@ -74,7 +74,7 @@ class Database(object):
 
         return json.dumps(record)
 
-    def create_template(self, name, file_name, tags, description):
+    def create_template(self, name, file_name, tags, description, origin_id = None):
         db = self.client['TMS_DB']
         db = db['templates']
         values = {}
@@ -85,14 +85,14 @@ class Database(object):
         values['is_activated'] = True
         values['is_enabled'] = True
         values['created_at'] = datetime.now()
-
         create_result = db.insert_one(values)
+        origin_id = create_result.inserted_id if not origin_id else origin_id
         print('Template', create_result.inserted_id, 'created')
 
         update_result = db.update_one(
                 {
                     '_id': ObjectId(create_result.inserted_id)
                 }, {'$set': {
-                    'origin_id': create_result.inserted_id
+                    'origin_id': origin_id
                 }})
         return update_result
