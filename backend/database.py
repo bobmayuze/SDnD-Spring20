@@ -97,12 +97,18 @@ class Database(object):
         values['tags'] = tags
         values['description'] = description
         values['is_activated'] = True
-        values['is_enabled'] = True
+        values['is_deleted'] = True
         values['created_at'] = datetime.now()
+        if origin_id:
+            test = db.update({
+                        'origin_id': ObjectId(origin_id)
+                    }, {'$set': {
+                        'is_activated': False
+                    }})
+            print(test, "HIIIII")
         create_result = db.insert_one(values)
         origin_id = create_result.inserted_id if not origin_id else origin_id
         print('Template', create_result.inserted_id, 'created')
-
         update_result = db.update_one(
                 {
                     '_id': ObjectId(create_result.inserted_id)
