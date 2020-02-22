@@ -48,8 +48,8 @@ def create_template():
 
 @app.route("/versions", methods=["GET"])
 def get_versions():
-    template_id = request.args.get("template_id")
-    resp = Response(response=db.get_versions(template_id), status=200, mimetype="application/json")
+    origin_id = request.args.get("origin_id")
+    resp = Response(response=db.get_versions(origin_id), status=200, mimetype="application/json")
     return resp  
 
 if __name__ == '__main__':
