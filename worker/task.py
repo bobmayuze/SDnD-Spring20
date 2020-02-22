@@ -73,13 +73,30 @@ class CallbackTask(Task):
         )        
 
 
-app = Celery('tasks')
+app = Celery('task')
 app.config_from_object(config)
 
 @app.task()
 def add(x, y):
     time.sleep(5)
     return x + y
+
+@app.task()
+def multiple(x, y):
+    return x * y
+
+@app.task(base=CallbackTask)
+def big_task(x):
+    print("Start ur {} seconds tasks.".format(x))
+    time.sleep(int(x))
+    print("Ending ur {} seconds tasks.".format(x))
+    return 0
+
+@app.task(base=CallbackTask)
+def create_deployment(template_id, region_id):
+    time.sleep(10)
+    print("We will deploy template",template_id, "to reigon", region_id)
+    return 0
 
 def runModel():
     print(ml_templates.train_model('./ml_templates/titanic_test.csv','./ml_templates/titanic_train.csv'))
