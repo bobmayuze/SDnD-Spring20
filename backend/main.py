@@ -46,6 +46,11 @@ def create_template():
     f.save("files/" + secure_filename(filename))
     return {"msg": "file uploaded succesfully"}
 
+@app.route("/versions", methods=["GET"])
+def get_versions():
+    template_id = request.args.get("template_id")
+    resp = Response(response=db.get_versions(template_id), status=200, mimetype="application/json")
+    return resp  
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

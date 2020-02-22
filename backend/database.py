@@ -74,6 +74,20 @@ class Database(object):
 
         return json.dumps(record)
 
+    def get_versions(self, origin_id):
+        db = self.client['TMS_DB']
+        db = db['templates']
+
+        record = db.find({'origin_id': origin_id})
+        ret_list = []
+        for x in db.find({'origin_id': origin_id}):
+            ret_list.append(x)
+            x['_id'] = str(x['_id'])
+            x['origin_id'] = str(x['origin_id'])
+            x['created_at'] = str(x['created_at'])
+        return json.dumps(ret_list)
+
+
     def create_template(self, name, file_name, tags, description, origin_id = None):
         db = self.client['TMS_DB']
         db = db['templates']
