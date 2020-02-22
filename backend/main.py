@@ -37,7 +37,9 @@ def create_template():
     description = request.form.get("description")
     tags = request.args.get("tags")
     
-    result = db.create_template(name, filename, tags, description)
+    template = Template(name, filename, tags) 
+    if description:
+        template.set_description(description)
 
     f.save("files/" + secure_filename(filename))
     return {"msg": "file uploaded succesfully"}
