@@ -71,26 +71,6 @@
             </a-col>
       </a-row>      
     </a-form-item>
-<!--     
-    <a-form-item :wrapper-col="{ span:16, offset:6}">
-        <a-row type="flex" justify="space-between">
-            <a-col :span="4">
-            <a-button type="primary" html-type="submit">
-            Submit
-            </a-button>
-            </a-col>            
-
-            <a-col :span="4">
-            <a-button 
-                type="primary" 
-                html-type="button"
-                v-on:click="$router.go(-1)"
-            >
-            Discard
-            </a-button>
-            </a-col>
-        </a-row>   
-    </a-form-item> -->
     </a-form>
 </template>
 
