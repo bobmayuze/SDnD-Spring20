@@ -12,14 +12,14 @@ class Template(object):
         self.versions = None
         self.db = Database()
 
+    def set_origin(self, origin_id):
+        self.origin_id = origin_id
+    
     def set_description(self, new_description):
         self.description = new_description
 
     def save_to_db(self):
-        self.db.create_template(self.name, self.filename, self.tags, self.description)
-
-    def create_version(self):
-        pass
+        resp = self.db.create_template(self.name, self.filename, self.tags, self.description, self.origin_id)
 
     def get_version(self):
         pass
