@@ -2,7 +2,7 @@ import pymongo
 from datetime import datetime
 import json
 from bson.objectid import ObjectId
-
+import pandas as pd
 class Database(object):
 
     client = None
@@ -36,9 +36,10 @@ class Database(object):
         db = db['templates']
 
         df = pd.DataFrame(list(db.find(
-            {'is_activated' : True}
+            {"is_activated": True}
         )))
-
+        if len(df) < 1:
+            return json.dumps([])
         foo = df.sort_values('created_at', ascending=False).drop_duplicates(subset=['origin_id'])
 
         records = foo.to_dict('records')        
@@ -55,10 +56,43 @@ class Database(object):
             record['_id'] = str(record['_id'])
             record['origin_id'] = str(record['origin_id'])
             record['created_at'] = str(record['created_at'])
-            record['key_words'] = list(record['key_words'])
+            # record['tags'] = list(record['tags'])
         #     # add it to the list to return
             toReturn.append(record)
 
         # # returns the pymongo cursor object
         return json.dumps(toReturn)
 
+    def get_single_template_by_id(self, unique_id):
+        db = self.client['TMS_DB']
+        db = db['templates']
+
+        record = db.find_one({'_id': ObjectId(unique_id)})
+        record['_id'] = str(record['_id'])
+        record['origin_id'] = str(record['origin_id'])
+        record['created_at'] = str(record['created_at'])
+
+        return json.dumps(record)
+
+    def create_template(self, name, file_name, tags, description):
+        db = self.client['TMS_DB']
+        db = db['templates']
+        values = {}
+        values['name'] = name
+        values['file_name'] = file_name
+        values['tags'] = tags
+        values['description'] = description
+        values['is_activated'] = True
+        values['is_enabled'] = True
+        values['created_at'] = datetime.now()
+
+        create_result = db.insert_one(values)
+        print('Template', create_result.inserted_id, 'created')
+
+        update_result = db.update_one(
+                {
+                    '_id': ObjectId(create_result.inserted_id)
+                }, {'$set': {
+                    'origin_id': create_result.inserted_id
+                }})
+        return update_result
