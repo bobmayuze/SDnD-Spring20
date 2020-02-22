@@ -4,7 +4,6 @@ import time
 
 import config
 
-<<<<<<< HEAD
 import ml_templates
 
 class CallbackTask(Task):
@@ -74,8 +73,6 @@ class CallbackTask(Task):
         )        
 
 
-=======
->>>>>>> origin/deployment_jobs
 app = Celery('task')
 app.config_from_object(config)
 
