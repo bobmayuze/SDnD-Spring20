@@ -72,7 +72,7 @@ application/json
 #### Body
 ```json
 {
-    "template_id" : SOME_OBJECT_ID
+    "origin_id" : "SOME_OBJECT_ID"
 }
 ```
 
