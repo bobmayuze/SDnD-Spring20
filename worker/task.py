@@ -4,12 +4,14 @@ import time
 
 import config
 
-app = Celery('tasks')
+app = Celery('task')
 app.config_from_object(config)
 
 @app.task()
 def add(x, y):
+    print(x)
+    print(y)
     time.sleep(5)
-    return x + y
+    return str(x) + str(y)
 
     
