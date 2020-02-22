@@ -56,7 +56,7 @@ const columns = [{
   width: '15%',
 }, {
   title: 'Tags',
-  dataIndex: 'key_words',
+  dataIndex: 'key_word',
   width: '25%',
 }, {  
   title: 'Created At',
@@ -105,7 +105,7 @@ export default {
       console.log('fetch triggered');
       this.loading = true
       reqwest({
-        url: 'http://localhost:5000/alltemplates',
+        url: 'http://localhost:5000/templates',
         method: 'get',
         data: {
           results : 10,
