@@ -21,11 +21,3 @@ class Template(object):
     def save_to_db(self):
         resp = self.db.create_template(self.name, self.filename, self.tags, self.description, self.origin_id)
 
-    def get_version(self):
-        pass
-
-    def delete_version(self):
-        pass
-    
-    def activate_version(self):
-        pass

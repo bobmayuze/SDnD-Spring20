@@ -52,5 +52,19 @@ def get_versions():
     resp = Response(response=db.get_versions(origin_id), status=200, mimetype="application/json")
     return resp  
 
+@app.route("/versions", methods=["PUT"])
+def activate_version():
+    origin_id = request.args.get("origin_id")
+    version_id = request.args.get("version_id")
+    resp = Response(response=db.activate_version(origin_id, version_id), status=200, mimetype="application/json")
+    return resp
+
+@app.route("/versions", methods=["DELETE"])
+def delete_version():
+    origin_id = request.args.get("origin_id")
+    version_id = request.args.get("version_id")
+    resp = Response(response=db.delete_version(origin_id, version_id), status=200, mimetype="application/json")
+    return resp
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

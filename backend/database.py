@@ -77,15 +77,46 @@ class Database(object):
     def get_versions(self, origin_id):
         db = self.client['TMS_DB']
         db = db['templates']
-
         ret_list = []
         for x in db.find({'origin_id': ObjectId(origin_id)}):
             ret_list.append(x)
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
             x['created_at'] = str(x['created_at'])
+        print(ret_list)
         return json.dumps(ret_list)
 
+    def activate_version(self, origin_id, version_id):
+        db = self.client['TMS_DB']
+        db = db['templates']
+        db.update_many({
+            'origin_id': ObjectId(origin_id)
+            },{'$set': {
+                'is_activated': False
+            }})
+        db.update_one({
+            '_id': ObjectId(version_id) 
+            },{'$set': {
+                'is_activated': True
+            }})
+        return json.dumps({"message": "update succesful"})
+
+    def delete_version(self, origin_id, version_id):
+        db = self.client['TMS_DB']
+        db = db['templates']
+        target = db.find_one({
+            '_id': ObjectId(version_id)
+            })
+        if target and target['is_activated'] == True:
+            db.update_one({
+                '_id': ObjectId(origin_id) 
+                },{'$set': {
+                    'is_activated': True
+                }})
+        db.delete_one({
+            '_id': ObjectId(version_id)
+            })
+        return json.dumps({"message": "deletion succesful"})
 
     def create_template(self, name, file_name, tags, description, origin_id = None):
         db = self.client['TMS_DB']
@@ -104,7 +135,6 @@ class Database(object):
                     }, {'$set': {
                         'is_activated': False
                     }})
-            print(test, "HIIIII")
         create_result = db.insert_one(values)
         origin_id = create_result.inserted_id if not origin_id else origin_id
         print('Template', create_result.inserted_id, 'created')
