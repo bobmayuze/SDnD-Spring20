@@ -20,11 +20,13 @@
           placeholder="Select Templates"
           style="width: 100%"
           :filterOption="false"
+          @search="fetchUser"
+          @change="handleChange"
           :notFoundContent="fetching ? undefined : null"
-        >
-          <a-spin v-if="fetching" slot="notFoundContent" size="small"/>
-          <a-select-option v-for="d in data" :key="d.value">{{d.text}}</a-select-option>
-        </a-select>
+      >
+        <a-spin v-if="fetching" slot="notFoundContent" size="small"/>
+        <a-select-option v-for="d in data" :key="d.value">{{d.text}}</a-select-option>
+      </a-select>
       </a-form-item>
 
 
@@ -44,6 +46,7 @@
       <!-- Submit Button -->
       <a-row>
         <a-col :span="6"></a-col>
+        <a-button @click="buttom_clicked(value, checkedList)" type="primary">Submit</a-button>
       </a-row>      
     </a-form>
   </div>
@@ -54,6 +57,10 @@
 </style>
 
 <script>
+import jsonp from 'fetch-jsonp';
+import querystring from 'querystring';
+import debounce from 'lodash/debounce';
+
 const plainOptions = ['Hangzhou', 'Beijing', 'Shanghai']
 const plainOptions_2 = ['Hongkong', 'German', 'Sydney']
 const defaultCheckedList = ['Hangzhou', 'Beijing']
@@ -68,6 +75,7 @@ export default {
       checkedList: defaultCheckedList,
       plainOptions,
       plainOptions_2,
+      checkAll: false,
       data: [],
       value: [],
       fetching: false,
@@ -77,8 +85,78 @@ export default {
     onChange (checkedList) {
       console.log('onChange');
       
-      this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
       this.checkAll = checkedList.length === plainOptions.concat(plainOptions_2).length
+    },
+    buttom_clicked (templates=[], regions="NOT PICKED YET") {    
+      templates.map(template => {
+        
+        regions.map(region => {
+          console.log('New deployment');
+          
+          console.log(template.key);
+          console.log(template.label);
+          console.log(region);
+          
+          fetch('http://localhost:5000/create_deployment_jobs',
+            {
+              method: 'POST',    
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                  "template_id" : template.key,
+                  "region_id" : region,
+                  "target_queue" : "sample_region_1"
+                })
+            }
+          )
+          .then(response => response.json())
+          .then((body) => {
+            console.log(body);
+            this.$notification.open({
+              message: 'Deployment Job Created',
+              description:
+                'Template ' + template.label + ' Created on Region ' + region,
+              icon: <a-icon type="smile" style="color: #52c41a" />,
+            });
+            this.$router.push({
+              path: `/jobs`
+            })                     
+          });          
+        })
+      })   
+    },
+    fetchUser (value) {
+      console.log('fetching user', value);
+      this.lastFetchId += 1;
+      const fetchId = this.lastFetchId;
+      this.data = []
+      this.fetching = true
+      fetch('http://localhost:5000/getTemplateByName',
+        {
+          method: 'POST',    
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({'key' : value})
+        }
+      )
+        .then(response => response.json())
+        .then((body) => {
+          console.log(body);
+          if (fetchId !== this.lastFetchId) { // for fetch callback order
+            return;
+          }
+          const data = body.map(template => ({
+            text: `${template.name}`,
+            value: template._id,
+          }));
+          this.data = data
+          this.fetching = false
+        });
+    },
+    handleChange (value) {
+      Object.assign(this, {
+        value,
+        data: [],
+        fetching: false,
+      })
     },
   }
 }
