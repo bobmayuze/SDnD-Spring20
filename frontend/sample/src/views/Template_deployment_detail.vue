@@ -29,7 +29,12 @@
         >
             <h2>{{template_info.status}}</h2>
         </a-form-item>         
- 
+
+        <br/>
+        <br/>
+        <br/>        
+        <br/>        
+        <br/>       
         <a-row>
             <a-col :span="6"/>
 
@@ -70,7 +75,17 @@ export default {
     },
     methods : {
         fetch(job_id, element){   
-            
+            console.log('Feting detail for', job_id);
+            const url = 'http://localhost:5000/get_deployment_detail'
+            axios.post(url, {
+                'job_id' : job_id
+            })
+            .then(function (response) {
+                element.template_info = response.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });         
         },
         buttonClieked(){
             console.log('Clicked');
