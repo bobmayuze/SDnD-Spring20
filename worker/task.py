@@ -1,5 +1,6 @@
 from celery import Celery, Task 
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import time
 
 import config
