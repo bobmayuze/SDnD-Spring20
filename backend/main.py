@@ -32,15 +32,39 @@ def get_template():
 @app.route("/templates", methods=["PUT"])
 def create_template():
     f = request.files["files"]
-    name = request.args.get("name")
+    name = request.form.get("name")
     filename = f.filename
-    description = request.args.get("description")
-    tags = request.args.get("tags")
-    result = db.create_template(name, filename, tags, description)
-    print(result)
+    description = request.form.get("description")
+    tags = request.form.get("tags")
+    origin_id = request.form.get("origin_id")
+    template = Template(name, filename, tags) 
+    if description:
+        template.set_description(description)
+    if origin_id:
+        template.set_origin(origin_id)
+    template.save_to_db()
     f.save("files/" + secure_filename(filename))
     return {"msg": "file uploaded succesfully"}
 
+@app.route("/versions", methods=["GET"])
+def get_versions():
+    origin_id = request.args.get("origin_id")
+    resp = Response(response=db.get_versions(origin_id), status=200, mimetype="application/json")
+    return resp  
+
+@app.route("/versions", methods=["PUT"])
+def activate_version():
+    origin_id = request.args.get("origin_id")
+    version_id = request.args.get("version_id")
+    resp = Response(response=db.activate_version(origin_id, version_id), status=200, mimetype="application/json")
+    return resp
+
+@app.route("/versions", methods=["DELETE"])
+def delete_version():
+    origin_id = request.args.get("origin_id")
+    version_id = request.args.get("version_id")
+    resp = Response(response=db.delete_version(origin_id, version_id), status=200, mimetype="application/json")
+    return resp
 
 # Endpoints for Jobs
 @app.route("/jobs", methods=["PUT"])

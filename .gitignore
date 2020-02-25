@@ -132,3 +132,5 @@ dmypy.json
 
 backend/files/
 /.vscode
+
+*.swo
