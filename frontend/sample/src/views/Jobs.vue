@@ -16,7 +16,33 @@
       size="middle"
     >
 
-            
+      <span slot="status" slot-scope="record">
+        <div v-if="record=='REVOKED'">
+          <a-tag color="pink">REVOKED</a-tag>
+        </div>
+        <div v-else-if="record=='SUCCESS'">
+          <a-tag color="green">SUCCESS</a-tag>
+        </div>
+        <div v-else-if="record=='FAILED'">
+          <a-tag color="red">FAILED</a-tag>
+        </div>                
+        <div v-else>
+          <a-tag color="orange">PENDING</a-tag>
+        </div>        
+      </span>
+
+      <span slot="operation" slot-scope="record">
+        <div v-if="record.status=='REVOKED'">
+          <a-button type="primary" disabled>Revoke</a-button>
+        </div>
+        <div v-else-if="record.status=='SUCCESS'">
+          <a-button type="primary" disabled>Revoke</a-button>
+        </div>        
+        <div v-else>
+          <a-button @click="revoke_task(record)" type="primary">Revoke</a-button>
+        </div>        
+        <!-- <a-button @click="revoke_task(record.task_id)" type="primary">Revoke</a-button> -->
+      </span>    
 
     </a-table>
     
@@ -30,6 +56,7 @@
 <script>
 import reqwest from 'reqwest';
 import axios from 'axios';
+// const axios = require('axios');
 
 const columns = [{
   title: 'Task Id',
@@ -73,13 +100,28 @@ export default {
     }
   },
   methods: {
+    revoke_task (record) {
+      console.log('Clicked', record.task_id);
+      const revoke_url = 'http://localhost:5000/revoke_deployment_job'
+      axios.post(revoke_url, {
+        'job_id' : record.task_id
+      })
+      .then(function (response) {
+        record.status = 'REVOKED'
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+      
+    },
     new_template () {
       window.location.assign('#/jobs/create_deployment_jobs')
-    },
+    },    
     handleTableChange (pagination, filters, sorter) {
       console.log(pagination);
     },
-    // FIXME: problem loading
     fetch (params = {}) {
       console.log('fetch triggered');
       this.loading = true
@@ -95,7 +137,7 @@ export default {
         this.loading = false;
         this.data = data;
         // this.pagination = pagination;
-      });
+      });      
     }
   },
 }
