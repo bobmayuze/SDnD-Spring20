@@ -43,7 +43,7 @@ application/x-www-form-urlencoded
     "name" : "Template-A",
     "description" : "This is a demo template",
     "Tags" : ["TypeA","TypeB"],
-    (optional)"template_id" : SOME_OBJECT_ID
+    (optional)"origin_id" : SOME_OBJECT_ID
 }
 ```
 
@@ -72,7 +72,7 @@ application/json
 #### Body
 ```json
 {
-    "template_id" : SOME_OBJECT_ID
+    "origin_id" : "SOME_OBJECT_ID"
 }
 ```
 
@@ -103,7 +103,7 @@ application/json
 #### Body
 ```json
 {
-    "template_id" : SOME_OBJECT_ID,
+    "origin_id" : SOME_OBJECT_ID,
     "version_id" : SOME_OBJECT_ID,
 }
 ```
