@@ -24,7 +24,7 @@
         </a-tag>
       </span>
 
-      <!-- <span slot="operation" slot-scope="record">
+      <span slot="operation" slot-scope="record">
         <div v-if="record.status=='REVOKED'">
           <a-button type="primary" disabled>Revoke</a-button>
         </div>
@@ -33,7 +33,7 @@
           <a-divider type="vertical" />
           <a-button @click="get_deployment_status(record)" type="primary">Deployment Status</a-button>
         </div>        
-      </span>     -->
+      </span>    
 
     </a-table>
     
@@ -89,12 +89,12 @@ export default {
          path: `/templates/template_detailed_info/?template_id=${record}`
       })      
     },    
-    // get_deployment_status (record) {
-    //   console.log('Origin', record.origin_id);
-    //   this.$router.push({
-    //     path: `/templates/deployment_status/?origin_id=${record.origin_id}`
-    //   })
-    // },
+    get_deployment_status (record) {
+      console.log('Origin', record.origin_id);
+      this.$router.push({
+        path: `/templates/deployment_status/?origin_id=${record.origin_id}`
+      })
+    },
     new_template () {
       window.location.assign('#/templates/templates_create')
     },    

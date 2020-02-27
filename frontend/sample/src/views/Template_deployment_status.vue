@@ -56,6 +56,12 @@
 import axios from 'axios';
 
 let available_regions = [
+    {'name' : 'Hangzhou'},
+    {'name' : 'Beijing'},
+    {'name' : 'Shanghai'},
+    {'name' : 'Hongkong'},
+    {'name' : 'German'},
+    {'name' : 'Sydney'}
 ]
 
 export default {
@@ -73,6 +79,36 @@ export default {
         }
     },
     methods : {
+        fetch(origin_id, element){
+            console.log('Feting detail for', origin_id);
+            const url = 'http://localhost:5000/get_deployed_regions'
+            axios.post(url, {
+                'origin_id' : origin_id
+            })
+            .then(function (response) {
+                element.template_info = response.data.result
+                console.log(element.template_info);
+                response.data.result.map(record => {
+                    // console.log(record);
+                    element.available_regions.map(region => {
+                        if (region.name == record.region) {
+                            region.task_id = record.task_id
+                            element.$forceUpdate()
+                        }
+                    })
+                    
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            });         
+        },
+        buttonClieked(info){
+            console.log('Clicked',info);
+            this.$router.push({
+                path: `/templates/deployment_detail/?job_id=${info}`
+            })            
+        },
     }
 }
 </script>

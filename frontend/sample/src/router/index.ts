@@ -6,7 +6,7 @@ import Templates_create from '../views/Templates_create.vue';
 import Template_detailed_info from '../views/Template_detailed_info.vue';
 import Template_update from '../views/Template_update.vue';
 import Template_deployment_detail from '../views/Template_deployment_detail.vue';
-// import Template_deployment_status from '../views/Template_deployment_status.vue';
+import Template_deployment_status from '../views/Template_deployment_status.vue';
 // import Template_versions from '../views/Template_versions.vue';
 
 Vue.use(Router);
@@ -43,11 +43,11 @@ export default new Router({
     name: 'deployment_detail',
     component: Template_deployment_detail,
   },
-  // {
-  //   path: '/templates/deployment_status',
-  //   name: 'deployment_status',
-  //   component: Template_deployment_status,
-  // },
+  {
+    path: '/templates/deployment_status',
+    name: 'deployment_status',
+    component: Template_deployment_status,
+  },
   // {
   //   path: '/templates/template_versions',
   //   name: 'template_versions',
