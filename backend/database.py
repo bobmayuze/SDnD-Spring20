@@ -4,6 +4,10 @@ import json
 from bson.objectid import ObjectId
 import pandas as pd
 class Database(object):
+    '''
+    Database CLass
+    '''
+    
 
     client = None
 

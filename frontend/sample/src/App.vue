@@ -50,6 +50,8 @@
   </div>
 </template>
 
+
+
 <script>
   export default {
     data() {
@@ -67,21 +69,17 @@
     cursor: pointer;
     transition: color 0.3s;
   }
-
   #components-layout-demo-custom-trigger .trigger:hover {
     color: #1890ff;
   }
-
   #components-layout-demo-custom-trigger .logo {
     height: 32px;
     background: rgba(255, 255, 255, 0.2);
     margin: 16px;
   }
-
   #components-layout-demo-custom-trigger .logo h1 {
     color: rgba(255, 255, 255, 0.85);
   }
-
   #components-layout-demo-custom-trigger .ant-layout-sider-children {
     height: 100vh;
   }
