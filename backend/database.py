@@ -127,10 +127,10 @@ class Database(object):
         values['tags'] = tags
         values['description'] = description
         values['is_activated'] = True
-        values['is_deleted'] = True
+        values['is_deleted'] = False
         values['created_at'] = datetime.now()
         if origin_id:
-            test = db.update({
+            test = db.update_many({
                         'origin_id': ObjectId(origin_id)
                     }, {'$set': {
                         'is_activated': False
