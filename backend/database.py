@@ -78,6 +78,18 @@ class Database(object):
 
         return json.dumps(record)
 
+    def get_templates_by_keyword(self, keyword):
+        db = self.client['TMS_DB']
+        db = db['templates']
+        ret_list = []
+        print(keyword)
+        for x in db.find({'tags': keyword}):
+            ret_list.append(x)
+            x['_id'] = str(x['_id'])
+            x['origin_id'] = str(x['origin_id'])
+            x['created_at'] = str(x['created_at'])
+        return json.dumps(ret_list)
+
     def get_versions(self, origin_id):
         db = self.client['TMS_DB']
         db = db['templates']
@@ -87,7 +99,6 @@ class Database(object):
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
             x['created_at'] = str(x['created_at'])
-        print(ret_list)
         return json.dumps(ret_list)
 
     def activate_version(self, origin_id, version_id):
