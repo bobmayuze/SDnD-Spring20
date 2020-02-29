@@ -107,9 +107,6 @@ export default {
       reqwest({
         url: 'http://localhost:5000/templates',
         method: 'get',
-        data: {
-          results : 10,
-        },
         type: 'json',
       }).then((data) => {
         console.log(data);
