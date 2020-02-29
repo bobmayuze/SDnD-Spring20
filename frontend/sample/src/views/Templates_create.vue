@@ -135,7 +135,7 @@ export default {
             this.form.validateFields((err, values) => {
                 formData.append('name', values.template_name);
                 formData.append('description', values.template_desc);
-                formData.append('tags', values.template_tags);
+                formData.append('tags[]', values.template_tags);
             });      
 
             // Display the key/value pairs

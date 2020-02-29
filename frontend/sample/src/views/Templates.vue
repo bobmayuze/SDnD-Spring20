@@ -56,7 +56,7 @@ const columns = [{
   width: '15%',
 }, {
   title: 'Tags',
-  dataIndex: 'key_word',
+  dataIndex: 'tags',
   width: '25%',
 }, {  
   title: 'Created At',
