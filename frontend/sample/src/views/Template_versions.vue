@@ -96,7 +96,41 @@ export default {
       columns,
     }
   },
-  methods: {    
+  methods: {
+    handleTableChange (pagination, filters, sorter) {
+      console.log(pagination);
+    },
+    activate_version(record){
+        console.log('Activating', record);
+        const activate_url = 'http://localhost:5000/activate_version'
+        axios.post(activate_url, {
+            'version_id' : record._id,
+            'template_id' : record.origin_id,
+        })
+        .then(function (response) {
+            console.log(response);
+            window.location.reload()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+    },
+    delete_version (record){
+        console.log('Deleting', record);
+        const delete_url = 'http://localhost:5000/delete_template_version'
+        axios.post(delete_url, {
+            'version_id' : record._id,
+        })
+        .then(function (response) {
+            console.log(response);
+            window.location.reload()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        
+    },
     fetch (params = {}) {
       console.log('fetch triggered', this.$route.query.template_id);
 
@@ -113,7 +147,7 @@ export default {
         this.loading = false;
         this.data = data;
       });      
-
+      
     }
   },
 }
