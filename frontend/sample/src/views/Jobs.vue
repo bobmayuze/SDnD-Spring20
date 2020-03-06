@@ -126,7 +126,7 @@ export default {
       console.log('fetch triggered');
       this.loading = true
       reqwest({
-        url: 'http://localhost:5000/get_deployment_jobs',
+        url: 'http://localhost:5000/jobs',
         method: 'get',
         data: {
           results : 10,
