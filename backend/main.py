@@ -22,11 +22,16 @@ def root():
 @app.route("/templates", methods=["GET"])
 def get_template():
     template_id = request.args.get("template_id")
-    key_word = request.args.get("key_word")
-    if not template_id and not key_word:
+    keyword = request.args.get("key_word")
+    if not template_id and not keyword:
         resp = Response(response=db.get_templates(), status=200, mimetype="application/json")
     elif template_id:
         resp = Response(response=db.get_single_template_by_id(template_id), status=200, mimetype="application/json")
+    elif keyword:
+        print('keyword searc', keyword)
+        resp = Response(response=db.get_templates_by_keyword(keyword), status=200, mimetype="application/json")
+    else:
+        resp = {"msg": "Something went wrong, please try again"}
     return resp
 
 @app.route("/templates", methods=["PUT"])
@@ -35,7 +40,7 @@ def create_template():
     name = request.form.get("name")
     filename = f.filename
     description = request.form.get("description")
-    tags = request.form.get("tags")
+    tags = request.form.getlist("tags[]")
     origin_id = request.form.get("origin_id")
     template = Template(name, filename, tags) 
     if description:
