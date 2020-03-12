@@ -99,11 +99,12 @@ export default {
           
           fetch('http://localhost:5000/jobs',
             {
-              method: 'POST',    
+              method: 'PUT',    
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                   "template_id" : template.key,
-                  "region" : region,
+                  "region_id" : region,
+                  "target_queue" : "sample_region_1"
                 })
             }
           )
@@ -138,13 +139,14 @@ export default {
         .then(response => response.json())
         .then((body) => {
           console.log(body);
-          if (fetchId !== this.lastFetchId) { // for fetch callback order
-            return;
-          }
+          // if (fetchId !== this.lastFetchId) { // for fetch callback order
+          //   return;
+          // }
           const data = body.map(template => ({
             text: `${template.name}`,
             value: template._id,
           }));
+          console.log(data);
           this.data = data
           this.fetching = false
         });

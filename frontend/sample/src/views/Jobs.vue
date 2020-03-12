@@ -28,6 +28,19 @@
         </div>        
       </span>  
 
+      <span slot="operation" slot-scope="record">
+        <div v-if="record.status=='REVOKED'">
+          <a-button type="primary" disabled>Revoke</a-button>
+        </div>
+        <div v-else-if="record.status=='SUCCESS'">
+          <a-button type="primary" disabled>Revoke</a-button>
+        </div>        
+        <div v-else>
+          <a-button @click="revoke_task(record)" type="primary">Revoke</a-button>
+        </div>        
+        <!-- <a-button @click="revoke_task(record.task_id)" type="primary">Revoke</a-button> -->
+      </span> 
+
     </a-table>
     
   </div>
@@ -95,7 +108,7 @@ export default {
       this.loading = true
       reqwest({
         url: 'http://localhost:5000/jobs',
-        method: 'get',
+        method: 'GET',
         data: {
           results : 10,
         },
