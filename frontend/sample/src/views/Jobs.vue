@@ -97,6 +97,22 @@ export default {
     }
   },
   methods: {
+    revoke_task (record) {
+      console.log('Clicked', record.task_id);
+      const revoke_url = 'http://localhost:5000/jobs'
+      axios.delete(revoke_url, {
+        data: {'task_id' : record.task_id}
+      })
+      .then(function (response) {
+        record.status = 'REVOKED'
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+      
+    },
     new_template () {
       window.location.assign('#/jobs/create_deployment_jobs')
     },    
