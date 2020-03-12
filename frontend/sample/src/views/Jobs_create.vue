@@ -97,14 +97,13 @@ export default {
           console.log(template.label);
           console.log(region);
           
-          fetch('http://localhost:5000/create_deployment_jobs',
+          fetch('http://localhost:5000/jobs',
             {
               method: 'POST',    
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                   "template_id" : template.key,
-                  "region_id" : region,
-                  "target_queue" : "sample_region_1"
+                  "region" : region,
                 })
             }
           )
@@ -130,11 +129,10 @@ export default {
       const fetchId = this.lastFetchId;
       this.data = []
       this.fetching = true
-      fetch('http://localhost:5000/getTemplateByName',
+      fetch('http://localhost:5000/templates',
         {
-          method: 'POST',    
+          method: 'GET',    
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({'key' : value})
         }
       )
         .then(response => response.json())
