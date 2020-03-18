@@ -17,6 +17,9 @@
     >
 
       <span slot="status" slot-scope="record">
+        <div v-if="record=='REVOKED'">
+          <a-tag color="pink">REVOKED</a-tag>
+        </div>
         <div v-if="record=='SUCCESS'">
           <a-tag color="green">SUCCESS</a-tag>
         </div>
