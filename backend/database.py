@@ -164,3 +164,14 @@ class Database(object):
                     'origin_id': ObjectId(origin_id)
                 }})
         return update_result
+
+    def create_region(self, name, address):
+        db = self.client['TMS_DB']
+        db = db['regions']
+        
+        values = {}
+        values['name'] = name
+        values['templates'] = []
+        values['deployment_task_ids'] = []
+        ret = db.insert_one(values)
+        return ret
