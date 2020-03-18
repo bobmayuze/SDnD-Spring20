@@ -3,19 +3,19 @@ import json
 
 url = 'http://localhost:5000/jobs'
 body = {
-    "template_id" : "SOME_TEMPLATE",
+    "template_id" : "TEST_Aneesh_v2",
     "region_id" : "sample_region_1",
     "target_queue" : "sample_region_1"
 }
 
 headers = {'content-type': 'application/json'}
 
-for i in range(10):
+for i in range(3):
     r = requests.put(url, data=json.dumps(body), headers=headers)
 
 # url = 'http://localhost:5000/jobs'
 # body = {
-#     "task_id" : "fd18e633-6fc7-4bd1-8b11-8c3799db2c20",
+#     "task_id" : "75e4d96d-723a-49d9-8e98-570ccf0f68ff",
 # }
 
 # headers = {'content-type': 'application/json'}

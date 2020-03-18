@@ -9,7 +9,7 @@ import ml_templates
 
 class CallbackTask(Task):
     def __init__(self):
-        self.db = MongoClient("mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=scicatDB", connect=False)['scicatDB']
+        self.db = MongoClient("mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB", connect=False)['TMS_DB']
 
     def on_success(self, retval, task_id, args, kwargs):
         # print('TASK SUCCESS')
@@ -71,13 +71,33 @@ class CallbackTask(Task):
         self.db['jobs'].update_one(
             { 'task_id' : task_id },
             { '$set': { 'status' : 'FAILED' }}
-        )        
+        )    
 
+
+
+class CallbackTaskTest(Task):
+    def __init__(self):
+        self.db = MongoClient("mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB", connect=False)['TMS_DB']
+
+    def on_success(self, retval, task_id, args, kwargs):
+        # print('TASK SUCCESS')
+        # print('args',args)
+        # print('kwargs', kwargs)
+        self.db['jobs'].update_one(
+            { 'task_id' : task_id },
+            { '$set': { 'status' : 'SUCCESS' }}
+        )
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        self.db['jobs'].update_one(
+            { 'task_id' : task_id },
+            { '$set': { 'status' : 'FAILED' }}
+        )
 
 app = Celery('task')
 app.config_from_object(config)
 
-@app.task()
+@app.task(base=CallbackTaskTest)
 def add(x, y):
     print(x)
     print(y)
