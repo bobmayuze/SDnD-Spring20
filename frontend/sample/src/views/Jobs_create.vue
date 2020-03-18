@@ -60,6 +60,7 @@
 import jsonp from 'fetch-jsonp';
 import querystring from 'querystring';
 import debounce from 'lodash/debounce';
+import axios from 'axios';
 
 const plainOptions = ['Hangzhou', 'Beijing', 'Shanghai']
 const plainOptions_2 = ['Hongkong', 'German', 'Sydney']
@@ -130,19 +131,18 @@ export default {
       const fetchId = this.lastFetchId;
       this.data = []
       this.fetching = true
-      fetch('http://localhost:5000/templates',
+      axios.get('http://localhost:5000/templates',
         {
-          method: 'GET',    
+          params: {customer_id: '1'},
           headers: {'Content-Type': 'application/json'},
         }
       )
-        .then(response => response.json())
-        .then((body) => {
-          console.log(body);
+        .then((response) => {
+          console.log(response.data);
           // if (fetchId !== this.lastFetchId) { // for fetch callback order
           //   return;
           // }
-          const data = body.map(template => ({
+          const data = response.data.map(template => ({
             text: `${template.name}`,
             value: template._id,
           }));
