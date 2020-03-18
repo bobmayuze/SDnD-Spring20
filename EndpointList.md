@@ -1,7 +1,7 @@
 # Templates
 
 ## GET /templates
-Get template by template_id, but if not provided, will return all templates instead. However, if key word is provieded as a string, it will return all templates that contains that string.
+Get template by template_id, but if not provided, will return all templates instead. However, if key word is provieded as a string, it will return all templates that contains that string. Also, if both template_id and deployed_regions_required is specified in the request, the deployed regions should be returned as well.
 ### Request
 #### Header
 ```
@@ -12,7 +12,8 @@ application/json
 ```json
 {
     (optional)"template_id" : SOME_OBJECT_ID,
-    (optional)"key_word" : SOME_KEY_WORD
+    (optional)"key_word" : SOME_KEY_WORD,
+    (optional)"deployed_regions_required" : True,
 }
 ```
 
