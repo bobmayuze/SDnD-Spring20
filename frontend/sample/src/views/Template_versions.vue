@@ -102,7 +102,7 @@ export default {
     },
     activate_version(record){
         console.log('Activating', record);
-        const activate_url = 'http://localhost:5000/activate_version'
+        const activate_url = 'http://localhost:5000/versions'
         axios.post(activate_url, {
             'version_id' : record._id,
             'template_id' : record.origin_id,
@@ -118,7 +118,7 @@ export default {
     },
     delete_version (record){
         console.log('Deleting', record);
-        const delete_url = 'http://localhost:5000/delete_template_version'
+        const delete_url = 'http://localhost:5000/versions'
         axios.post(delete_url, {
             'version_id' : record._id,
         })
@@ -136,7 +136,7 @@ export default {
 
       this.loading = true
       reqwest({
-        url: 'http://localhost:5000/get_template_versions',
+        url: 'http://localhost:5000/templates',
         method: 'post',
         data: {
           'template_id' : this.$route.query.template_id , 

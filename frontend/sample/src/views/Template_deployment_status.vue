@@ -81,7 +81,7 @@ export default {
     methods : {
         fetch(origin_id, element){
             console.log('Feting detail for', origin_id);
-            const url = 'http://localhost:5000/get_deployed_regions'
+            const url = 'http://localhost:5000/templates'
             axios.post(url, {
                 'origin_id' : origin_id
             })

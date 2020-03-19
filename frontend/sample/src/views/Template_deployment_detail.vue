@@ -76,7 +76,7 @@ export default {
     methods : {
         fetch(job_id, element){   
             console.log('Feting detail for', job_id);
-            const url = 'http://localhost:5000/get_deployment_detail'
+            const url = 'http://localhost:5000/jobs'
             axios.post(url, {
                 'job_id' : job_id
             })

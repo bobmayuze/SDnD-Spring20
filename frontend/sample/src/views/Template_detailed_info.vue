@@ -105,7 +105,7 @@ export default {
     methods : {
         fetch(template_id, element){
             console.log('Feting detail for', template_id);
-            const url = 'http://localhost:5000/getTemplateByID'
+            const url = 'http://localhost:5000/templates'
             axios.post(url, {
                 'template_id' : template_id
             })
