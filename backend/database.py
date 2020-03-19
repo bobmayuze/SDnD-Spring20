@@ -83,7 +83,11 @@ class Database(object):
         db = db['templates']
         ret_list = []
         print(keyword)
-        for x in db.find({'tags': keyword}):
+        docs = db.find({
+            'name': {'$regex': keyword},
+            'is_activated' : True
+        })
+        for x in docs:
             ret_list.append(x)
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
