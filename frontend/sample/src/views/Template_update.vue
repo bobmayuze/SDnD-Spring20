@@ -131,7 +131,7 @@ export default {
       let { fileList } = this;
       let formData = new FormData();
       fileList.forEach(file => {
-        formData.append('files[]', file);
+        formData.append('files', file);
       });
       this.uploading = true;
       // formData.append('username', 'Chris');
@@ -144,12 +144,10 @@ export default {
         formData.append('origin_id', this.$route.query.template_id);
       });      
 
-      // Display the key/value pairs
+      // Display the key/va   lue pairs
       for (var pair of formData.entries()) {
           console.log(pair[0]+ ', ' + pair[1]); 
-      }
-      console.log('error check');
-      console.log(formData);        
+      }    
 
       // You can use any AJAX library you like
       reqwest({
