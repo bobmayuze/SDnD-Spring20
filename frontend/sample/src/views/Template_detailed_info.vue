@@ -10,14 +10,14 @@
             v-bind="formItemLayout"
             label="Name"
         >
-            <h2>{{template_info.name}}</h2>
+            {{template_info.name}}
         </a-form-item>
 
         <a-form-item
             v-bind="formItemLayout"
             label="Activated Version"
         >
-            <h2 style="inline">{{template_info._id}}</h2>
+            {{template_info._id}}
             <a-button 
                 type="primary" 
                 html-type="button"
@@ -31,7 +31,7 @@
             v-bind="formItemLayout"
             label="Created At"
         >
-            <h2>{{template_info.created_at}}</h2>
+            {{template_info.created_at}}
         </a-form-item> 
 
         <a-form-item
@@ -48,7 +48,7 @@
             <a-tag
                 :color="Math.ceil(Math.random()*10) > 5 ? 'green' : 'pink'"
             >
-                {{template_info.key_words}}
+                {{template_info.tags}}
             </a-tag>
         </a-form-item> 
 
@@ -106,8 +106,10 @@ export default {
         fetch(template_id, element){
             console.log('Feting detail for', template_id);
             const url = 'http://localhost:5000/templates'
-            axios.post(url, {
-                'template_id' : template_id
+            axios.get(url, {
+                params: {
+                    'template_id' : template_id
+                }
             })
             .then(function (response) {
                 element.template_info = response.data

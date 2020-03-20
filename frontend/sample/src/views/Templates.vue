@@ -48,7 +48,7 @@ import axios from 'axios';
 
 const columns = [{
   title: 'Template Id',
-  dataIndex: 'origin_id',
+  dataIndex: '_id',
   width: '15%',
 }, {
   title: 'Name',

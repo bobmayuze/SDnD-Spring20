@@ -77,8 +77,10 @@ export default {
         fetch(job_id, element){   
             console.log('Feting detail for', job_id);
             const url = 'http://localhost:5000/jobs'
-            axios.post(url, {
-                'job_id' : job_id
+            axios.get(url, {
+                params: {
+                    'job_id' : job_id
+                }
             })
             .then(function (response) {
                 element.template_info = response.data

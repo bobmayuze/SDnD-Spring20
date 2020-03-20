@@ -138,17 +138,18 @@ export default {
 
 
       this.form.validateFields((err, values) => {
-        formData.append('description', values.template_desc);
         formData.append('name', values.template_name);
-        formData.append('key_words', values.template_tags);
-        formData.append('template_id', this.$route.query.template_id);
-
+        formData.append('description', values.template_desc);
+        formData.append('tags[]', values.template_tags);
+        formData.append('origin_id', this.$route.query.template_id);
       });      
 
       // Display the key/value pairs
       for (var pair of formData.entries()) {
           console.log(pair[0]+ ', ' + pair[1]); 
-      }        
+      }
+      console.log('error check');
+      console.log(formData);        
 
       // You can use any AJAX library you like
       reqwest({

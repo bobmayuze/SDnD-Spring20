@@ -61,7 +61,7 @@ import axios from 'axios';
 
 const columns = [{
   title: 'Version Id',
-  dataIndex: '_id',
+  dataIndex: 'version_id',
   width: '15%',
 }, {
   title: 'Name',
@@ -103,9 +103,9 @@ export default {
     activate_version(record){
         console.log('Activating', record);
         const activate_url = 'http://localhost:5000/versions'
-        axios.post(activate_url, {
-            'version_id' : record._id,
-            'template_id' : record.origin_id,
+        axios.put(activate_url, {
+          'origin_id' : record.origin_id,
+          'version_id' : record.version_id,
         })
         .then(function (response) {
             console.log(response);
@@ -119,8 +119,9 @@ export default {
     delete_version (record){
         console.log('Deleting', record);
         const delete_url = 'http://localhost:5000/versions'
-        axios.post(delete_url, {
-            'version_id' : record._id,
+        axios.put(delete_url, {
+          'origin_id' : record.origin_id,
+          'version_id' : record.version_id,
         })
         .then(function (response) {
             console.log(response);
@@ -136,8 +137,8 @@ export default {
 
       this.loading = true
       reqwest({
-        url: 'http://localhost:5000/templates',
-        method: 'post',
+        url: 'http://localhost:5000/versions',
+        method: 'get',
         data: {
           'template_id' : this.$route.query.template_id , 
         },

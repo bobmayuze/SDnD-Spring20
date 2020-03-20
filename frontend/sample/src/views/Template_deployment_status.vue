@@ -82,8 +82,10 @@ export default {
         fetch(origin_id, element){
             console.log('Feting detail for', origin_id);
             const url = 'http://localhost:5000/templates'
-            axios.post(url, {
-                'origin_id' : origin_id
+            axios.get(url, {
+                params: {
+                    'origin_id' : origin_id
+                }
             })
             .then(function (response) {
                 element.template_info = response.data.result
