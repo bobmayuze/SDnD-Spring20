@@ -81,7 +81,7 @@ export default {
     methods : {
         fetch(origin_id, element){
             console.log('Feting detail for', origin_id);
-            const url = 'http://localhost:5000/templates'
+            const url = 'http://localhost:5000/versions'
             axios.get(url, {
                 params: {
                     'origin_id' : origin_id

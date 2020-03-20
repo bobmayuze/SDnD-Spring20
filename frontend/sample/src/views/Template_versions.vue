@@ -119,7 +119,7 @@ export default {
     delete_version (record){
         console.log('Deleting', record);
         const delete_url = 'http://localhost:5000/versions'
-        axios.put(delete_url, {
+        axios.delete(delete_url, {
           'origin_id' : record.origin_id,
           'version_id' : record.version_id,
         })
