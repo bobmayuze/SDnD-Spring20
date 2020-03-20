@@ -10,7 +10,7 @@ import ml_templates
 class CallbackTask(Task):
     def __init__(self):
         self.db = MongoClient("mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB", connect=False)['TMS_DB']
-
+        
     def on_success(self, retval, task_id, args, kwargs):
         # print('TASK SUCCESS')
         # print('args',args)
@@ -97,7 +97,7 @@ class CallbackTaskTest(Task):
 app = Celery('task')
 app.config_from_object(config)
 
-@app.task(base=CallbackTaskTest)
+@app.task(base=CallbackTask)
 def add(x, y):
     print(x)
     print(y)

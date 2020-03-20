@@ -3,7 +3,7 @@ import json
 
 url = 'http://localhost:5000/jobs'
 body = {
-    "template_id" : "TEST_Aneesh_v2",
+    "template_id" : "TEST",
     "region_id" : "sample_region_1",
     "target_queue" : "sample_region_1"
 }
