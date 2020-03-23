@@ -38,7 +38,7 @@ def add(x, y):
     time.sleep(5)
     return str(x) + str(y)
 
-@app.task()
+@app.task(base=CallbackTask)
 def multiple(x, y):
     return x * y
 
