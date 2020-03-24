@@ -3,11 +3,18 @@ from datetime import datetime
 import json
 from bson.objectid import ObjectId
 import pandas as pd
+
+from models import Template
 class Database(object):
     '''
     Database CLass
     '''
-    
+    instance = None
+    @staticmethod
+    def getDB():
+        if Database.instance == None:
+            Database()
+        return Database.instance
 
     client = None
 
@@ -16,6 +23,7 @@ class Database(object):
         self.client = pymongo.MongoClient(
                 "mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB",
             connect=False)
+        Database.instance = self
 
     '''
     fetches all regions from the collections named regions
@@ -137,30 +145,47 @@ class Database(object):
             })
         return json.dumps({"message": "deletion succesful"})
 
-    def create_template(self, name, file_name, tags, description, origin_id = None):
+    def create_version(self, version):
+        template_origin = version.get_origin()
+
+
+    def create_template(self, template):
         db = self.client['TMS_DB']
         db = db['templates']
-        values = {}
-        values['name'] = name
-        values['file_name'] = file_name
-        values['tags'] = tags
-        values['description'] = description
-        values['is_activated'] = True
-        values['is_deleted'] = False
-        values['created_at'] = datetime.now()
-        if origin_id:
-            test = db.update_many({
-                        'origin_id': ObjectId(origin_id)
-                    }, {'$set': {
-                        'is_activated': False
-                    }})
-        create_result = db.insert_one(values)
-        origin_id = create_result.inserted_id if not origin_id else origin_id
+        print(template.serialize())
+        create_result = db.insert_one(template.serialize())
+        origin_id = create_result.inserted_id
         print('Template', create_result.inserted_id, 'created')
-        update_result = db.update_one(
-                {
-                    '_id': ObjectId(create_result.inserted_id)
-                }, {'$set': {
-                    'origin_id': ObjectId(origin_id)
-                }})
-        return update_result
+        resp = db.update_one(
+            {
+                '_id': ObjectId(create_result.inserted_id)
+            }, {'$set': {
+                'origin_id': ObjectId(origin_id)
+            }}
+        )
+        return resp
+        # values = {}
+        # values['name'] = name
+        # values['file_name'] = file_name
+        # values['tags'] = tags
+        # values['description'] = description
+        # values['is_activated'] = True
+        # values['is_deleted'] = False
+        # values['created_at'] = datetime.now()
+        # if origin_id:
+        #     test = db.update_many({
+        #                 'origin_id': ObjectId(origin_id)
+        #             }, {'$set': {
+        #                 'is_activated': False
+        #             }})
+        # create_result = db.insert_one(values)
+        # origin_id = create_result.inserted_id if not origin_id else origin_id
+        # print('Template', create_result.inserted_id, 'created')
+        # update_result = db.update_one(
+        #         {
+        #             '_id': ObjectId(create_result.inserted_id)
+        #         }, {'$set': {
+        #             'origin_id': ObjectId(origin_id)
+        #         }})
+        # return update_result
+ 
