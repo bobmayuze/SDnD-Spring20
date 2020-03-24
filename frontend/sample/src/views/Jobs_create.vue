@@ -72,11 +72,14 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 10 },
     }
+    this.lastFetchId = 0;
+    this.fetchUser = debounce(this.fetchUser, 800);
     return {
       checkedList: defaultCheckedList,
+      indeterminate: true,
+      checkAll: false,
       plainOptions,
       plainOptions_2,
-      checkAll: false,
       data: [],
       value: [],
       fetching: false,
@@ -86,7 +89,15 @@ export default {
     onChange (checkedList) {
       console.log('onChange');
       
+      this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
       this.checkAll = checkedList.length === plainOptions.concat(plainOptions_2).length
+    },
+    onCheckAllChange (e) {
+      Object.assign(this, {
+        checkedList: e.target.checked ? plainOptions.concat(plainOptions_2) : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      })
     },
     buttom_clicked (templates=[], regions="NOT PICKED YET") {    
       templates.map(template => {
@@ -118,30 +129,34 @@ export default {
                 'Template ' + template.label + ' Created on Region ' + region,
               icon: <a-icon type="smile" style="color: #52c41a" />,
             });
-            this.$router.push({
-              path: `/jobs`
-            })                     
+            const path = `/jobs`
+            if (this.$route.path !== path) this.$router.push(path)
+                   
           });          
         })
       })   
     },
     fetchUser (value) {
-      console.log('fetching user', value);
+      console.log('fetching template', value);
       this.lastFetchId += 1;
       const fetchId = this.lastFetchId;
       this.data = []
       this.fetching = true
+      this.key_word = value;
       axios.get('http://localhost:5000/templates',
         {
-          params: {customer_id: '1'},
+          params: {
+            ...(this.key_word ? { key_word: this.key_word } : {}),
+            // ...(this.deployed_regions_required == true ? { deployed_regions_required: true } : {})
+          },
           headers: {'Content-Type': 'application/json'},
         }
       )
         .then((response) => {
           console.log(response.data);
-          // if (fetchId !== this.lastFetchId) { // for fetch callback order
-          //   return;
-          // }
+          if (fetchId !== this.lastFetchId) { // for fetch callback order
+            return;
+          }
           const data = response.data.map(template => ({
             text: `${template.name}`,
             value: template._id,

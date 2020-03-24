@@ -71,26 +71,6 @@
             </a-col>
       </a-row>      
     </a-form-item>
-<!--     
-    <a-form-item :wrapper-col="{ span:16, offset:6}">
-        <a-row type="flex" justify="space-between">
-            <a-col :span="4">
-            <a-button type="primary" html-type="submit">
-            Submit
-            </a-button>
-            </a-col>            
-
-            <a-col :span="4">
-            <a-button 
-                type="primary" 
-                html-type="button"
-                v-on:click="$router.go(-1)"
-            >
-            Discard
-            </a-button>
-            </a-col>
-        </a-row>   
-    </a-form-item> -->
     </a-form>
 </template>
 
@@ -147,16 +127,15 @@ export default {
             let { fileList } = this;
             let formData = new FormData();
             fileList.forEach(file => {
-                formData.append('files[]', file);
+                formData.append('files', file);
             });
             this.uploading = true;
-            formData.append('username', 'Chris');
+            // formData.append('username', 'Chris');
 
             this.form.validateFields((err, values) => {
-                formData.append('template_desc', values.template_desc);
-                formData.append('template_name', values.template_name);
-                formData.append('template_tags', values.template_tags);
-
+                formData.append('name', values.template_name);
+                formData.append('description', values.template_desc);
+                formData.append('tags[]', values.template_tags);
             });      
 
             // Display the key/value pairs
@@ -166,8 +145,8 @@ export default {
 
             // You can use any AJAX library you like
             reqwest({
-                url: 'http://localhost:5000/create_template',
-                method: 'post',
+                url: 'http://localhost:5000/templates',
+                method: 'put',
                 processData: false,
                 data: formData,
                 success: () => {
