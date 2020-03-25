@@ -29,7 +29,7 @@ application/json
 }
 ```
 
-## PUT /templates
+## POST /templates
 Create a template. If template_id is specified, it will be used on creating a new version for that template.
 
 ### Request
@@ -44,7 +44,6 @@ application/x-www-form-urlencoded
     "name" : "Template-A",
     "description" : "This is a demo template",
     "Tags" : ["TypeA","TypeB"],
-    (optional)"origin_id" : SOME_OBJECT_ID
 }
 ```
 
@@ -74,6 +73,36 @@ application/json
 ```json
 {
     "origin_id" : "SOME_OBJECT_ID"
+}
+```
+
+### Response
+#### Header
+```
+application/json
+```
+#### Body
+```json
+{
+    templates[]
+}
+```
+
+## POST /versions
+Create a new version given origin_id
+### Request
+#### Header
+```
+application/json
+```
+
+#### Body
+```json
+{
+    "origin_id" : "SOME_OBJECT_ID",
+    "name": "name of version",
+    "file": "file for this version",
+    
 }
 ```
 
