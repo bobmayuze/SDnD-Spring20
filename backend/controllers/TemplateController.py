@@ -32,6 +32,6 @@ def create_template():
     tags = request.form.getlist("tags[]")
     origin_id = request.form.get("origin_id")
     template = Template(name, filename, tags, description)
-    db.create_template(template)
+    status = db.create_template(template)
     f.save("files/" + secure_filename(filename))
-    return {"msg": "template created succesfully"}
+    return {'msg': 'template created!'}

@@ -78,12 +78,16 @@ class Database(object):
     def get_single_template_by_id(self, unique_id):
         db = self.client['TMS_DB']
         db = db['templates']
-
         record = db.find_one({'_id': ObjectId(unique_id)})
         record['_id'] = str(record['_id'])
         record['origin_id'] = str(record['origin_id'])
         record['created_at'] = str(record['created_at'])
-
+        serialized_versions = []
+        for v in record['versions']:
+            v['version_id'] = str(v['version_id'])
+            serialized_versions.append(v)
+        record['versions'] = serialized_versions
+        print(record)
         return json.dumps(record)
 
     def get_templates_by_keyword(self, keyword):
@@ -106,26 +110,23 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
         ret_list = []
-        for x in db.find({'origin_id': ObjectId(origin_id)}):
-            ret_list.append(x)
-            x['_id'] = str(x['_id'])
-            x['origin_id'] = str(x['origin_id'])
-            x['created_at'] = str(x['created_at'])
-        return json.dumps(ret_list)
+        template = db.find_one({'_id': ObjectId(origin_id)})
+        return json.dumps(template['versions']) if template else {} 
 
     def activate_version(self, origin_id, version_id):
         db = self.client['TMS_DB']
         db = db['templates']
-        db.update_many({
-            'origin_id': ObjectId(origin_id)
-            },{'$set': {
-                'is_activated': False
-            }})
-        db.update_one({
-            '_id': ObjectId(version_id) 
-            },{'$set': {
-                'is_activated': True
-            }})
+        db.update({ 
+            "_id": ObjectId(origin_id), 
+            "versions.is_activated": True},
+           {"$set": {"versions.$.is_activated": False}}
+        )
+        db.update({
+            "_id": ObjectId(origin_id), 
+            "versions.version_id": version_id},
+           {"$set": {"versions.$.is_activated": True}}
+        )
+        db.update({"_id": ObjectId(origin_id)}, {"$set": {"activated_version": version_id}}) # serialize?
         return json.dumps({"message": "update succesful"})
 
     def delete_version(self, origin_id, version_id):
@@ -145,14 +146,20 @@ class Database(object):
             })
         return json.dumps({"message": "deletion succesful"})
 
-    def create_version(self, version):
-        template_origin = version.get_origin()
 
+    def update_template(self, template):
+        db = self.client['TMS_DB']
+        db = db['templates']
+        del(template._id)
+        db.replace_one(
+            { '_id': ObjectId(template.origin_id) },
+            template.serialize()
+        )
+        return True
 
     def create_template(self, template):
         db = self.client['TMS_DB']
         db = db['templates']
-        print(template.serialize())
         create_result = db.insert_one(template.serialize())
         origin_id = create_result.inserted_id
         print('Template', create_result.inserted_id, 'created')
@@ -163,29 +170,5 @@ class Database(object):
                 'origin_id': ObjectId(origin_id)
             }}
         )
-        return resp
-        # values = {}
-        # values['name'] = name
-        # values['file_name'] = file_name
-        # values['tags'] = tags
-        # values['description'] = description
-        # values['is_activated'] = True
-        # values['is_deleted'] = False
-        # values['created_at'] = datetime.now()
-        # if origin_id:
-        #     test = db.update_many({
-        #                 'origin_id': ObjectId(origin_id)
-        #             }, {'$set': {
-        #                 'is_activated': False
-        #             }})
-        # create_result = db.insert_one(values)
-        # origin_id = create_result.inserted_id if not origin_id else origin_id
-        # print('Template', create_result.inserted_id, 'created')
-        # update_result = db.update_one(
-        #         {
-        #             '_id': ObjectId(create_result.inserted_id)
-        #         }, {'$set': {
-        #             'origin_id': ObjectId(origin_id)
-        #         }})
-        # return update_result
+        return True
  
