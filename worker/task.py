@@ -26,38 +26,38 @@ class CallbackTask(Task):
             }
         )
         
-        # print("HAHA", counter.count())
-        # # Case 1 : This template is new to the region
-        # if counter.count() < 1:
-        #     update_result = self.db['regions'].update_one(
-        #         {'name' : args[1]},
-        #         {
-        #             '$push': {
-        #                 'templates': template_origin_id,
-        #                 'deployment_task_ids' : task_id
-        #             }
-        #         }
-        #     )
-        #     print('Updated', update_result.matched_count, 'region')            
+        print("HAHA", counter.count())
+        # Case 1 : This template is new to the region
+        if counter.count() < 1:
+            update_result = self.db['regions'].update_one(
+                {'name' : args[1]},
+                {
+                    '$push': {
+                        'templates': template_origin_id,
+                        'deployment_task_ids' : task_id
+                    }
+                }
+            )
+            print('Updated', update_result.matched_count, 'region')            
 
-        # # Case 2 : This template has been deployed before
-        # if counter.count() >= 1:
-        #     print('Update deployment_task_ids here')
-        #     index_result = self.db['regions'].aggregate([ 
-        #         { '$match': {"name":args[1]} },
-        #         { "$project": { "matchedIndex": { "$indexOfArray": [ "$templates", template_origin_id ] } } } 
-        #     ])
-        #     deployment_task_index = 0
-        #     for i in index_result:
-        #         deployment_task_index = i['matchedIndex']
-        #     self.db['regions'].update_one(
-        #         {"name":args[1]},
-        #         {
-        #             '$set' : {
-        #                 'deployment_task_ids.' + str(deployment_task_index) : task_id
-        #             }
-        #         }
-        #     )
+        # Case 2 : This template has been deployed before
+        if counter.count() >= 1:
+            print('Update deployment_task_ids here')
+            index_result = self.db['regions'].aggregate([ 
+                { '$match': {"name":args[1]} },
+                { "$project": { "matchedIndex": { "$indexOfArray": [ "$templates", template_origin_id ] } } } 
+            ])
+            deployment_task_index = 0
+            for i in index_result:
+                deployment_task_index = i['matchedIndex']
+            self.db['regions'].update_one(
+                {"name":args[1]},
+                {
+                    '$set' : {
+                        'deployment_task_ids.' + str(deployment_task_index) : task_id
+                    }
+                }
+            )
 
 
 

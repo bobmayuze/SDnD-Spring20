@@ -165,9 +165,14 @@ class Database(object):
                 }})
         return update_result
 
-    def create_region(self, name, address):
+    def create_region(self, name):
+        # TODO Check if a regin exist or if u should drop it
         db = self.client['TMS_DB']
         db = db['regions']
+
+        # if (db.find_one({ 'name': name })){
+
+        # }
         
         values = {}
         values['name'] = name
