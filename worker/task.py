@@ -17,7 +17,7 @@ class CallbackTask(Task):
             { 'task_id' : task_id },
             { '$set': { 'status' : 'SUCCESS' }}
         )
-        template_origin_id = self.db['templates'].find_one({'_id' : ObjectId(args[0])})['origin_id']
+        template_origin_id = self.db['templates'].find_one({'_id' : args[0]})['origin_id']
 
         counter = self.db['regions'].find(
             {
