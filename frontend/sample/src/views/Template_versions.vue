@@ -123,14 +123,14 @@ export default {
         });
     },
     fetch(params = {}) {
-      console.log("fetch triggered", this.$route.query.template_id);
+      console.log("fetch triggered", this.$route.query.origin_id);
 
       this.loading = true;
       reqwest({
         url: "http://localhost:5000/versions",
         method: "get",
         data: {
-          origin_id: this.$route.query.template_id
+          origin_id: this.$route.query.origin_id
         },
         type: "json"
       }).then(data => {
