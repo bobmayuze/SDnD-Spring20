@@ -2,9 +2,10 @@ import requests
 import json
 
 url = 'http://localhost:5000/jobs'
+## IMPORTANT: change template_id to whatever _id is in the templates database
 body = {
-    "template_id" : "5e7cfe95d287956d4a902803",
-    "region_id" : "sample_region_1",
+    "template_id" : "5e7fe684c3acf7834de776e3",
+    "region_id" : "Beijing",
     "target_queue" : "sample_region_1"
 }
 
