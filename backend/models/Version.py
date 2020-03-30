@@ -11,7 +11,7 @@ class Version(AbstractModel):
             self.filename = filename
             self.is_activated = True
             self.is_deleted = False
-            self.origin_id = origin_id
+            self.origin_id = str(origin_id)
             self.version_id = str(ObjectId())
 
     def get_origin(self):
@@ -19,9 +19,10 @@ class Version(AbstractModel):
 
     def serialize(self):
         clone = copy.copy(self)
+        clone.origin_id = ObjectId(clone.origin_id)
         clone.version_id = ObjectId(clone.version_id)
         return vars(self)
-    
+
     @staticmethod
     def getVersion(template_id):
         pass

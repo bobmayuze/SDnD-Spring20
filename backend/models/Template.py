@@ -11,7 +11,6 @@ class Template(AbstractModel):
             self.__dict__ = json.loads(json_payload)
             deserialized_versions = [] 
             for v in self.versions:
-                print("HIHIHI", v)
                 deserialized_version = Version(None, None, None, json.dumps(v))
                 deserialized_versions.append(deserialized_version)
             self.versions = deserialized_versions
@@ -31,6 +30,17 @@ class Template(AbstractModel):
             pass
         self.versions.append(version)
         self.activated_version = str(version.version_id)
+        return True
+
+    def delete_version(self, version_id):
+        for v in self.versions:
+            if v.version_id == version_id:
+                v.is_deleted = True
+                if v.version_id == self.activated_version and len(self.versions) > 0:
+                    self.activated_version = self.origin_id
+                    v.is_activated = False
+                    self.versions[0].is_activated = True
+                break
         return True
 
     def serialize(self):

@@ -22,7 +22,6 @@ def create_version():
     f.save("files/" + secure_filename(filename))
     new_version = Version(name, filename, origin_id)
     template = Template.getTemplate(origin_id)
-    print(template.versions)
     template.add_version(new_version)
     db.update_template(template)
     return {'msg': 'version added succesfully'}
@@ -40,5 +39,7 @@ def delete_version():
     # TODO: Get Versoin Object
     origin_id = request.args.get("origin_id")
     version_id = request.args.get("version_id")
-    resp = Response(response=db.delete_version(origin_id, version_id), status=200, mimetype="version_controllerlication/json")
-    return resp
+    template = Template.getTemplate(origin_id)
+    template.delete_version(version_id)
+    db.update_template(template)
+    return {"msg": "template deleted!"}

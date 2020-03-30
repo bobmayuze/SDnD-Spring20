@@ -80,14 +80,15 @@ class Database(object):
         db = db['templates']
         record = db.find_one({'_id': ObjectId(unique_id)})
         record['_id'] = str(record['_id'])
+        record['activated_version'] = str(record['activated_version'])
         record['origin_id'] = str(record['origin_id'])
         record['created_at'] = str(record['created_at'])
         serialized_versions = []
         for v in record['versions']:
             v['version_id'] = str(v['version_id'])
+            v['origin_id'] = str(v['origin_id'])
             serialized_versions.append(v)
         record['versions'] = serialized_versions
-        print(record)
         return json.dumps(record)
 
     def get_templates_by_keyword(self, keyword):
@@ -109,9 +110,17 @@ class Database(object):
     def get_versions(self, origin_id):
         db = self.client['TMS_DB']
         db = db['templates']
+        versions = db.find(
+            {'_id': ObjectId(origin_id)}, 
+            {'versions': {'$elemMatch': {'is_deleted': False}}}
+        )
         ret_list = []
-        template = db.find_one({'_id': ObjectId(origin_id)})
-        return json.dumps(template['versions']) if template else {} 
+        for version in versions:
+            print(version)
+            # version['origin_id'] = str(version['origin_id'])
+            # version['version_id'] = str(version['version_id'])
+            # ret_list.append(version)
+        return json.dumps(ret_list) 
 
     def activate_version(self, origin_id, version_id):
         db = self.client['TMS_DB']
@@ -126,7 +135,7 @@ class Database(object):
             "versions.version_id": version_id},
            {"$set": {"versions.$.is_activated": True}}
         )
-        db.update({"_id": ObjectId(origin_id)}, {"$set": {"activated_version": version_id}}) # serialize?
+        db.update({"_id": ObjectId(origin_id)}, {"$set": {"activated_version": ObjectId(version_id)}}) # serialize?
         return json.dumps({"message": "update succesful"})
 
     def delete_version(self, origin_id, version_id):
@@ -134,16 +143,16 @@ class Database(object):
         db = db['templates']
         target = db.find_one({
             '_id': ObjectId(version_id)
-            })
+        })
         if target and target['is_activated'] == True:
             db.update_one({
                 '_id': ObjectId(origin_id) 
-                },{'$set': {
+            },{'$set': {
                     'is_activated': True
-                }})
+            }})
         db.delete_one({
             '_id': ObjectId(version_id)
-            })
+        })
         return json.dumps({"message": "deletion succesful"})
 
 
@@ -157,18 +166,34 @@ class Database(object):
         )
         return True
 
-    def create_template(self, template):
+    def create_template(self, template, filename = None):
+        # Version shouldn't be created here, but for now I'm going to do it.
         db = self.client['TMS_DB']
         db = db['templates']
         create_result = db.insert_one(template.serialize())
         origin_id = create_result.inserted_id
         print('Template', create_result.inserted_id, 'created')
+        new_version = {
+            "name": template.name,
+            "filename": filename,
+            "is_activated": True,
+            "is_deleted": False,
+            "origin_id": ObjectId(create_result.inserted_id),
+            "version_id": ObjectId(create_result.inserted_id)
+        }
         resp = db.update_one(
             {
                 '_id': ObjectId(create_result.inserted_id)
-            }, {'$set': {
-                'origin_id': ObjectId(origin_id)
-            }}
+            }, 
+            {
+                '$set': {
+                    'activated_version': ObjectId(origin_id),
+                    'origin_id': ObjectId(origin_id) 
+                },
+                '$push': {
+                    'versions': new_version
+                }
+            }
         )
-        return True
+        return {"msg": "template created succesfully"}
  
