@@ -82,9 +82,11 @@
 
 <script>
 import reqwest from 'reqwest';
+import axios from 'axios';
 
-export default {
+export default {  
   data: () => ({
+    template_info : 'SOME INFO',
     formItemLayout: {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -95,7 +97,27 @@ export default {
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'validate_other' });
   },
+  mounted() {
+      // this.fetch(this.$route.query.origin_id, this);
+      console.log(this.$route.query.origin_id);
+  },  
   methods: {
+    fetch(template_id, element){
+        console.log('Feting detail for', template_id);
+        const url = 'http://localhost:5000/templates'
+        axios.get(url, {
+            params: {
+                'template_id' : template_id
+            }
+        })
+        .then((response) => {
+            element.template_info = response.data
+        })
+        .catch((error) => {
+            console.log(error);
+        });         
+
+    },    
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
@@ -141,9 +163,12 @@ export default {
         formData.append('name', values.template_name);
         formData.append('description', values.template_desc);
         formData.append('tags[]', values.template_tags);
-        formData.append('origin_id', this.$route.query.template_id);
+        formData.append('origin_id', this.$route.query.origin_id);
       });      
 
+      console.log(formData);
+      
+      
       // Display the key/va   lue pairs
       for (var pair of formData.entries()) {
           console.log(pair[0]+ ', ' + pair[1]); 

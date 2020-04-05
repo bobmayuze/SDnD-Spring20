@@ -197,3 +197,20 @@ class Database(object):
         )
         return {"msg": "template created succesfully"}
  
+    def create_region(self, name):
+        # TODO Check if a region exist or if u should drop it
+        db = self.client['TMS_DB']
+
+        db = db['regions']
+
+            ## Delete duplicate values
+        if (db.find_one({ 'name': name })):
+        
+            db.delete_many({ 'name': name})
+        
+        values = {}
+        values['deployment_task_ids'] = []
+        values['templates'] = []
+        values['name'] = name
+        return ret
+        ret = db.insert_one(values)
