@@ -21,7 +21,7 @@
             <a-button 
                 type="primary" 
                 html-type="button"
-                v-on:click="$router.push(`/templates/template_versions/?template_id=${$route.query.template_id}`)"
+                v-on:click="$router.push(`/templates/template_versions/?origin_id=${template_info.origin_id}`)"
             >
                 View All Versions
             </a-button>      
@@ -64,7 +64,7 @@
                 <a-button 
                     type="primary" 
                     html-type="button"
-                    v-on:click="$router.push(`/templates/template_update/?template_id=${$route.query.template_id}`)"
+                    v-on:click="$router.push(`/templates/template_update/?origin_id=${template_info.origin_id}`)"
                 >
                     New Version
                 </a-button>                
@@ -111,10 +111,10 @@ export default {
                     'template_id' : template_id
                 }
             })
-            .then(function (response) {
+            .then((response) => {
                 element.template_info = response.data
             })
-            .catch(function (error) {
+            .catch((error) => {
                 console.log(error);
             });         
 
