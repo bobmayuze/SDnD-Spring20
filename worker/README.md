@@ -2,12 +2,12 @@
 
 ## Start a worker
 ```sh
-$ celery -A tasks worker -l INFO -n s1 -Q sample_region_1
+$ celery -A task worker -l INFO -n s1 -Q sample_region_1
 ```
 
 ## Start a monitor
 ```sh
-$ celery -A tasks flower -l INFO
+$ celery -A task flower -l INFO
 ```
 
 # Sample script for task distributor constructing

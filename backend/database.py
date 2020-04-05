@@ -164,3 +164,21 @@ class Database(object):
                     'origin_id': ObjectId(origin_id)
                 }})
         return update_result
+
+    def create_region(self, name):
+        # TODO Check if a region exist or if u should drop it
+        db = self.client['TMS_DB']
+        db = db['regions']
+
+
+        if (db.find_one({ 'name': name })):
+            ## Delete duplicate values
+            db.delete_many({ 'name': name})
+        
+        
+        values = {}
+        values['name'] = name
+        values['templates'] = []
+        values['deployment_task_ids'] = []
+        ret = db.insert_one(values)
+        return ret
