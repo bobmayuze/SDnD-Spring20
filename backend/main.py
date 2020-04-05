@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from database import Database
 
 from deployment_job import deployment_job_service
 
@@ -8,6 +9,7 @@ from controllers import TemplateController, VersionController
 app = Flask(__name__)
 CORS(app)
 
+db = Database()
 job = deployment_job_service()
 
 @app.route("/")
@@ -40,5 +42,5 @@ def revoke_job():
 if __name__ == '__main__':
     app.register_blueprint(TemplateController.template_controller)
     app.register_blueprint(VersionController.version_controller)
-    db.create_region('Beijing')
+    # db.create_region('Beijing')
     app.run(debug=True, host='0.0.0.0', port=5000)

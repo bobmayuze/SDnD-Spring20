@@ -2,6 +2,7 @@ from bson.objectid import ObjectId
 import copy
 import json
 from . AbstractModel import AbstractModel
+from datetime import datetime
 class Version(AbstractModel):
     def __init__(self, name, filename, origin_id, json_payload = None):
         if json_payload:
@@ -13,6 +14,7 @@ class Version(AbstractModel):
             self.is_deleted = False
             self.origin_id = str(origin_id)
             self.version_id = str(ObjectId())
+            self.created_at = datetime.now()
 
     def get_origin(self):
         return self.origin_id

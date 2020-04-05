@@ -47,32 +47,14 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
 
-        df = pd.DataFrame(list(db.find(
-            {"is_activated": True}
-        )))
-        if len(df) < 1:
-            return json.dumps([])
-        foo = df.sort_values('created_at', ascending=False).drop_duplicates(subset=['origin_id'])
-
-        records = foo.to_dict('records')        
-
-        # template_ids = db.distinct('origin_id',{})
-
-        # temporarily just prints them all to stdout
+        templates = db.find({}, {'versions': 0})
         toReturn = []
-        for record in records:
-            # record = db.find_one({'_id': ObjectId(template_id)})
-            print(record)
-        #     # hacky way to fix the fact that the id is stored as an
-        #     # ObjectID() object
-            record['_id'] = str(record['_id'])
-            record['origin_id'] = str(record['origin_id'])
-            record['created_at'] = str(record['created_at'])
-            # record['tags'] = list(record['tags'])
-        #     # add it to the list to return
-            toReturn.append(record)
-
-        # # returns the pymongo cursor object
+        for template in list(templates):
+            template['activated_version'] = str(template['activated_version'])
+            template['origin_id'] = str(template['origin_id'])
+            template['_id'] = str(template['_id'])
+            template['created_at'] = str(template['created_at'])
+            toReturn.append(template)
         return json.dumps(toReturn)
 
     def get_single_template_by_id(self, unique_id):
@@ -87,6 +69,7 @@ class Database(object):
         for v in record['versions']:
             v['version_id'] = str(v['version_id'])
             v['origin_id'] = str(v['origin_id'])
+            v['created_at'] = str(v['created_at'])
             serialized_versions.append(v)
         record['versions'] = serialized_versions
         return json.dumps(record)
@@ -110,16 +93,19 @@ class Database(object):
     def get_versions(self, origin_id):
         db = self.client['TMS_DB']
         db = db['templates']
-        versions = db.find(
+        query = db.find(
             {'_id': ObjectId(origin_id)}, 
-            {'versions': {'$elemMatch': {'is_deleted': False}}}
+            {'_id': 0, 'versions': 1}
         )
         ret_list = []
-        for version in versions:
-            print(version)
-            # version['origin_id'] = str(version['origin_id'])
-            # version['version_id'] = str(version['version_id'])
-            # ret_list.append(version)
+        for result in query:
+            for version in result['versions']:
+                if version['is_deleted']:
+                    continue
+                version['origin_id'] = str(version['origin_id'])
+                version['version_id'] = str(version['version_id'])
+                version['created_at'] = str(version['created_at'])
+                ret_list.append(version)
         return json.dumps(ret_list) 
 
     def activate_version(self, origin_id, version_id):
@@ -179,7 +165,8 @@ class Database(object):
             "is_activated": True,
             "is_deleted": False,
             "origin_id": ObjectId(create_result.inserted_id),
-            "version_id": ObjectId(create_result.inserted_id)
+            "version_id": ObjectId(create_result.inserted_id),
+            "created_at": datetime.now()
         }
         resp = db.update_one(
             {

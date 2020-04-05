@@ -29,16 +29,20 @@ def create_version():
 @version_controller.route("/versions", methods=["PUT"])
 def activate_version():
     # TODO: Get Version Object
-    origin_id = request.args.get("origin_id")
-    version_id = request.args.get("version_id")
+    req_json = request.get_json()
+    origin_id = req_json['origin_id']
+    version_id = req_json['version_id'] 
     resp = Response(response=db.activate_version(origin_id, version_id), status=200, mimetype="version_controllerlication/json")
     return resp
 
 @version_controller.route("/versions", methods=["DELETE"])
 def delete_version():
     # TODO: Get Versoin Object
-    origin_id = request.args.get("origin_id")
-    version_id = request.args.get("version_id")
+    req_json = request.get_json()
+    print(req_json)
+    origin_id = req_json['origin_id'] 
+    version_id = req_json['version_id']
+    print(origin_id, version_id, "HIIIIIII")
     template = Template.getTemplate(origin_id)
     template.delete_version(version_id)
     db.update_template(template)
