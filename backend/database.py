@@ -57,7 +57,7 @@ class Database(object):
             toReturn.append(template)
         return json.dumps(toReturn)
 
-    def get_single_template_by_id(self, unique_id):
+    def get_single_template_by_id(self, unique_id, regions_required = False):
         db = self.client['TMS_DB']
         db = db['templates']
         record = db.find_one({'_id': ObjectId(unique_id)})
@@ -72,6 +72,15 @@ class Database(object):
             v['created_at'] = str(v['created_at'])
             serialized_versions.append(v)
         record['versions'] = serialized_versions
+        if regions_required:
+            db = self.client['TMS_DB']
+            db = db['regions']
+            regions = db.find({"templates": ObjectId(unique_id)})
+            region_list = []
+            for region in regions:
+               region_list.append(region['name']) 
+            record['regions'] = region_list
+
         return json.dumps(record)
 
     def get_templates_by_keyword(self, keyword):
@@ -87,7 +96,6 @@ class Database(object):
             x['versions'] = None
             x['activated_version'] = str(x['activated_version'])
             x['created_at'] = str(x['created_at'])
-            print(x)
             ret_list.append(x)
 
         return json.dumps(ret_list)

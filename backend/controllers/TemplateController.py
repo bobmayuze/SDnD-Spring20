@@ -10,12 +10,12 @@ db = Database()
 def get_template():
     template_id = request.args.get("template_id")
     keyword = request.args.get("key_word")
+    deployed_regions_required = request.args.get("deployed_regions_required")
     if not template_id and not keyword:
         resp = Response(response=db.get_templates(), status=200, mimetype="application/json")
     elif template_id:
-        resp = Response(response=db.get_single_template_by_id(template_id), status=200, mimetype="application/json")
+        resp = Response(response=db.get_single_template_by_id(template_id, deployed_regions_required), status=200, mimetype="application/json")
     elif keyword:
-        print('keyword searc', keyword)
         resp = Response(response=db.get_templates_by_keyword(keyword), status=200, mimetype="application/json")
     else:
         resp = {"msg": "Something went wrong, please try again"}
