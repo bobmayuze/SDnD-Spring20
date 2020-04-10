@@ -42,5 +42,5 @@ def revoke_job():
 if __name__ == '__main__':
     app.register_blueprint(TemplateController.template_controller)
     app.register_blueprint(VersionController.version_controller)
-    # db.create_region('Beijing')
+    db.create_region('Beijing')
     app.run(debug=True, host='0.0.0.0', port=5000)

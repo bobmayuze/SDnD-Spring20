@@ -78,16 +78,18 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
         ret_list = []
-        print(keyword)
         docs = db.find({
-            'name': {'$regex': keyword},
-            'is_activated' : True
+            'name': {'$regex': keyword}
         })
         for x in docs:
-            ret_list.append(x)
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
+            x['versions'] = None
+            x['activated_version'] = str(x['activated_version'])
             x['created_at'] = str(x['created_at'])
+            print(x)
+            ret_list.append(x)
+
         return json.dumps(ret_list)
 
     def get_versions(self, origin_id):
@@ -199,5 +201,6 @@ class Database(object):
         values['deployment_task_ids'] = []
         values['templates'] = []
         values['name'] = name
-        return ret
+
         ret = db.insert_one(values)
+        return ret
