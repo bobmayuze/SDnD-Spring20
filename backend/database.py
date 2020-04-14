@@ -74,12 +74,18 @@ class Database(object):
         record['versions'] = serialized_versions
         if regions_required:
             db = self.client['TMS_DB']
-            db = db['regions']
-            regions = db.find({"templates": ObjectId(unique_id)})
-            region_list = []
-            for region in regions:
-               region_list.append(region['name']) 
-            record['regions'] = region_list
+            db = db['jobs']
+            detail_list = db.find({"task_name": unique_id})
+            ret_list = []
+            for detail in detail_list:
+                d = {
+                    "region": detail["target_region"],
+                    "task_id": detail["task_id"],
+                    "task_name": detail["task_name"],
+                    "create_time": str(detail["create_time"])
+                }
+                ret_list.append(d)
+            record['details'] = ret_list
 
         return json.dumps(record)
 
