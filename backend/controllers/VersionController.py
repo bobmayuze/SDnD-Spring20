@@ -32,17 +32,17 @@ def activate_version():
     req_json = request.get_json()
     origin_id = req_json['origin_id']
     version_id = req_json['version_id'] 
-    resp = Response(response=db.activate_version(origin_id, version_id), status=200, mimetype="version_controllerlication/json")
-    return resp
+    template = Template.getTemplate(origin_id)
+    template.activate_version(version_id)
+    # resp = Response(response=db.activate_version(origin_id, version_id), status=200, mimetype="version_controllerlication/json")
+    return {'msg': 'version activated succesfully'}
 
 @version_controller.route("/versions", methods=["DELETE"])
 def delete_version():
     # TODO: Get Versoin Object
     req_json = request.get_json()
-    print(req_json)
     origin_id = req_json['origin_id'] 
     version_id = req_json['version_id']
-    print(origin_id, version_id, "HIIIIIII")
     template = Template.getTemplate(origin_id)
     template.delete_version(version_id)
     db.update_template(template)

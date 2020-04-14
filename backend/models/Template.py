@@ -22,6 +22,7 @@ class Template(AbstractModel):
             self.versions = []
             self.created_at = datetime.now()
             self.activated_version = None
+            self.activated_name = name
             self.origin_id = None
 
     def add_version(self, version):
@@ -30,7 +31,16 @@ class Template(AbstractModel):
             pass
         self.versions.append(version)
         self.activated_version = str(version.version_id)
+        self.activated_name = version.name
         return True
+
+    def activate_version(self, version_id):
+        for v in self.versions:
+            if v.version_id == version_id:
+                self.activated_version = version_id
+                self.activated_name = v.name
+                return True
+        return False
 
     def delete_version(self, version_id):
         for v in self.versions:

@@ -168,7 +168,6 @@ class Database(object):
         db = db['templates']
         create_result = db.insert_one(template.serialize())
         origin_id = create_result.inserted_id
-        print('Template', create_result.inserted_id, 'created')
         new_version = {
             "name": template.name,
             "filename": filename,
