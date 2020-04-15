@@ -4,7 +4,7 @@ import json
 url = 'http://localhost:5000/jobs'
 ## IMPORTANT: change template_id to whatever _id is in the templates database
 body = {
-    "template_id" : "5e7fe684c3acf7834de776e3",
+    "template_id" : "5e8a46b25c96fe2875576147",
     "region_id" : "Beijing",
     "target_queue" : "sample_region_1"
 }
