@@ -1,8 +1,9 @@
+<!-- This page display the deployment status of a template -->
 <template>
     <a-form id="components-form-demo-validate-other">
         <a-row>
             <a-col :span="6"></a-col>
-            <h1>Tempalte Deployment Status</h1>
+            <h1>Template Deployment Status</h1>
         </a-row>
 
         <br/>
@@ -11,7 +12,7 @@
 
         <a-row>
             <a-col :span="6"/>
-            <a-col :span="6">
+            <a-col :span="8">
             <a-list :grid="{ gutter: 6, column: 3 }" :dataSource="available_regions">
                 <a-list-item slot="renderItem" slot-scope="item">
                     <div v-if="item.task_id">
@@ -55,6 +56,7 @@
 <script>
 import axios from 'axios';
 
+// Data center location list
 let available_regions = [
     {'name' : 'Hangzhou'},
     {'name' : 'Beijing'},
@@ -79,6 +81,8 @@ export default {
         }
     },
     methods : {
+        // get the template info by the origin id
+        // display the activated version template deployment status
         fetch(origin_id, element){
             console.log('Feting detail for', origin_id);
             const url = 'http://localhost:5000/versions'

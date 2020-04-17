@@ -1,3 +1,5 @@
+<!-- This page display the detailed information of a template 
+This page also redirects to template new version page-->
 <template>
     <a-form id="components-form-demo-validate-other">
         <a-row>
@@ -103,7 +105,7 @@ export default {
         }
     },
     methods : {
-        fetch(template_id, element){
+        fetch(template_id, element){// get the current activated template infor
             console.log('Feting detail for', template_id);
             const url = 'http://localhost:5000/templates'
             axios.get(url, {

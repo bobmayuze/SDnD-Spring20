@@ -1,3 +1,4 @@
+<!-- This page is the interface for creating a template -->
 <template>
     <a-form id="components-form-demo-validate-other" :form="form" @submit="handleSubmit">
     <a-row>
@@ -91,7 +92,7 @@ export default {
       this.form = this.$form.createForm(this, { name: 'validate_other' });
     },
     methods: {
-        handleSubmit(e) {
+        handleSubmit(e) {// handle the submit and validate the form
             e.preventDefault();
             this.form.validateFields((err, values) => {
                 if (!err) {
@@ -132,7 +133,7 @@ export default {
             this.uploading = true;
             // formData.append('username', 'Chris');
 
-            this.form.validateFields((err, values) => {
+            this.form.validateFields((err, values) => {// validate the input from user
                 formData.append('name', values.template_name);
                 formData.append('description', values.template_desc);
                 formData.append('tags[]', values.template_tags);
@@ -144,7 +145,7 @@ export default {
             }        
 
             // You can use any AJAX library you like
-            reqwest({
+            reqwest({// endpoint: templates, method: post
                 url: 'http://localhost:5000/templates',
                 method: 'post',
                 processData: false,

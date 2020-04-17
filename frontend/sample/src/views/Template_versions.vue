@@ -1,3 +1,4 @@
+<!-- This page display the version list of a template -->
 <template>
   <div class="Templates">
     <h1>Template Versions</h1>
@@ -40,6 +41,7 @@
 import reqwest from "reqwest";
 import axios from "axios";
 
+// set up the display table values
 const columns = [
   {
     title: "Version Id",
@@ -87,8 +89,8 @@ export default {
     handleTableChange(pagination, filters, sorter) {
       console.log(pagination);
     },
-    activate_version(record) {
-      console.log("Activating", record);
+    activate_version(record) {// activate other version template
+      console.log("Activating", record);// endpoint: versions, method: put
       const activate_url = "http://localhost:5000/versions";
       axios({
         method: "put",
@@ -106,8 +108,8 @@ export default {
           console.log(error);
         });
     },
-    delete_version(record) {
-      console.log("Deleting", record);
+    delete_version(record) {// delete a certain version in the database
+      console.log("Deleting", record);// endpoint: versions, method: delete
       const delete_url = "http://localhost:5000/versions";
       axios
         .delete(delete_url, {
@@ -124,11 +126,11 @@ export default {
           console.log(error);
         });
     },
-    fetch(params = {}) {
+    fetch(params = {}) {// get the version list of a template
       console.log("fetch triggered", this.$route.query.origin_id);
 
       this.loading = true;
-      reqwest({
+      reqwest({// endpoint: versions, method: get
         url: "http://localhost:5000/versions",
         method: "get",
         data: {

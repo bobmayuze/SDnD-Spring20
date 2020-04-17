@@ -1,3 +1,4 @@
+<!-- This page display the list of a template -->
 <template>
   <div class="Templates">
     <h1>Templates</h1>
@@ -46,6 +47,7 @@
 import reqwest from 'reqwest';
 import axios from 'axios';
 
+// set up the column display values
 const columns = [{
   title: 'Template Id',
   dataIndex: '_id',
@@ -87,19 +89,19 @@ export default {
     }
   },
   methods: {
-    get_details (record) {
+    get_details (record) {// get the template details
       console.log('Clicked', record);
       this.$router.push({
          path: `/templates/template_detailed_info/?template_id=${record}`
       })      
     },    
-    get_deployment_status (record) {
+    get_deployment_status (record) {// get the deployment status
       console.log('Origin', record.origin_id);
       this.$router.push({
         path: `/templates/deployment_status/?origin_id=${record.origin_id}`
       })
     },
-    new_template () {
+    new_template () {// redirects to the create template page
       window.location.assign('#/templates/templates_create')
     },    
     handleTableChange (pagination, filters, sorter) {
@@ -108,7 +110,7 @@ export default {
     fetch (params = {}) {
       console.log('fetch triggered');
       this.loading = true
-      reqwest({
+      reqwest({// endpoint: templates, method: get
         url: 'http://localhost:5000/templates',
         method: 'get',
         type: 'json',

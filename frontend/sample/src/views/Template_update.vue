@@ -1,3 +1,5 @@
+<!-- This page is the interface for the update of template
+Only update the template name and files, keep the origin tags and descriptions -->
 <template>
 
   <a-form id="components-form-demo-validate-other" :form="form" @submit="handleSubmit">
@@ -118,7 +120,7 @@ export default {
         });         
 
     },    
-    handleSubmit(e) {
+    handleSubmit(e) {// validate the form input
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -169,7 +171,7 @@ export default {
       console.log(formData);
       
       
-      // Display the key/va   lue pairs
+      // Display the key/value pairs
       for (var pair of formData.entries()) {
           console.log(pair[0]+ ', ' + pair[1]); 
       }    
