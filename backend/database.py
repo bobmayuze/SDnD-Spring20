@@ -82,7 +82,8 @@ class Database(object):
                     "region": detail["target_region"],
                     "task_id": detail["task_id"],
                     "task_name": detail["task_name"],
-                    "create_time": str(detail["create_time"])
+                    "create_time": str(detail["create_time"]),
+                    "status": detail["status"]
                 }
                 ret_list.append(d)
             record['details'] = ret_list
