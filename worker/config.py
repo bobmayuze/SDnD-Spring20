@@ -1,5 +1,6 @@
 from kombu import Queue
 ## Broker settings.
+# config file for backend development
 BROKER_URL = 'amqp://rabbitmq_username:rabbitmq_password@rabbit_mq:5672/'
 
 CELERY_IGNORE_RESULT = False
