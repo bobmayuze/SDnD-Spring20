@@ -55,13 +55,17 @@ const columns = [{
   dataIndex: 'name',
   width: '15%',
 }, {
+  title: 'Activated Version Name',
+  dataIndex: 'activated_name',
+  width: '20%',
+}, {
   title: 'Tags',
   dataIndex: 'tags',
-  width: '25%',
+  width: '15%',
 }, {  
   title: 'Created At',
   dataIndex: 'created_at',
-  width: '20%',
+  width: '15%',
 }, {  
   title: 'Action', 
   key: 'operation', 

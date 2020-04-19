@@ -4,7 +4,7 @@
 
     <a-table
       :columns="columns"
-      :rowKey="record => record._id"
+      :rowKey="record => record.version_id"
       :dataSource="data"
       :pagination="pagination"
       :loading="loading"
@@ -43,7 +43,7 @@ import axios from "axios";
 const columns = [
   {
     title: "Version Id",
-    dataIndex: "_id",
+    dataIndex: "version_id",
     width: "15%"
   },
   {
@@ -95,7 +95,7 @@ export default {
         url: activate_url,
         data: {
           'origin_id': record.origin_id,
-          'version_id': record._id
+          'version_id': record.version_id
         }
       })
         .then(function(response) {
@@ -111,8 +111,10 @@ export default {
       const delete_url = "http://localhost:5000/versions";
       axios
         .delete(delete_url, {
-          'origin_id': record.origin_id,
-          'version_id': record._id
+          data: {
+            'origin_id': record.origin_id,
+            'version_id': record.version_id
+          }
         })
         .then(function(response) {
           console.log(response);

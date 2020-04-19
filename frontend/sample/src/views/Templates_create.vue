@@ -146,7 +146,7 @@ export default {
             // You can use any AJAX library you like
             reqwest({
                 url: 'http://localhost:5000/templates',
-                method: 'put',
+                method: 'post',
                 processData: false,
                 data: formData,
                 success: () => {

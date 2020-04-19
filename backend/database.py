@@ -3,11 +3,18 @@ from datetime import datetime
 import json
 from bson.objectid import ObjectId
 import pandas as pd
+
+from models import Template
 class Database(object):
     '''
     Database CLass
     '''
-    
+    instance = None
+    @staticmethod
+    def getDB():
+        if Database.instance == None:
+            Database()
+        return Database.instance
 
     client = None
 
@@ -16,6 +23,7 @@ class Database(object):
         self.client = pymongo.MongoClient(
                 "mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB",
             connect=False)
+        Database.instance = self
 
     '''
     fetches all regions from the collections named regions
@@ -39,42 +47,46 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
 
-        df = pd.DataFrame(list(db.find(
-            {"is_activated": True}
-        )))
-        if len(df) < 1:
-            return json.dumps([])
-        foo = df.sort_values('created_at', ascending=False).drop_duplicates(subset=['origin_id'])
-
-        records = foo.to_dict('records')        
-
-        # template_ids = db.distinct('origin_id',{})
-
-        # temporarily just prints them all to stdout
+        templates = db.find({}, {'versions': 0})
         toReturn = []
-        for record in records:
-            # record = db.find_one({'_id': ObjectId(template_id)})
-            print(record)
-        #     # hacky way to fix the fact that the id is stored as an
-        #     # ObjectID() object
-            record['_id'] = str(record['_id'])
-            record['origin_id'] = str(record['origin_id'])
-            record['created_at'] = str(record['created_at'])
-            # record['tags'] = list(record['tags'])
-        #     # add it to the list to return
-            toReturn.append(record)
-
-        # # returns the pymongo cursor object
+        for template in list(templates):
+            template['activated_version'] = str(template['activated_version'])
+            template['origin_id'] = str(template['origin_id'])
+            template['_id'] = str(template['_id'])
+            template['created_at'] = str(template['created_at'])
+            toReturn.append(template)
         return json.dumps(toReturn)
 
-    def get_single_template_by_id(self, unique_id):
+    def get_single_template_by_id(self, unique_id, regions_required = False):
         db = self.client['TMS_DB']
         db = db['templates']
-
         record = db.find_one({'_id': ObjectId(unique_id)})
         record['_id'] = str(record['_id'])
+        record['activated_version'] = str(record['activated_version'])
         record['origin_id'] = str(record['origin_id'])
         record['created_at'] = str(record['created_at'])
+        serialized_versions = []
+        for v in record['versions']:
+            v['version_id'] = str(v['version_id'])
+            v['origin_id'] = str(v['origin_id'])
+            v['created_at'] = str(v['created_at'])
+            serialized_versions.append(v)
+        record['versions'] = serialized_versions
+        if regions_required:
+            db = self.client['TMS_DB']
+            db = db['jobs']
+            detail_list = db.find({"task_name": unique_id})
+            ret_list = []
+            for detail in detail_list:
+                d = {
+                    "region": detail["target_region"],
+                    "task_id": detail["task_id"],
+                    "task_name": detail["task_name"],
+                    "create_time": str(detail["create_time"]),
+                    "status": detail["status"]
+                }
+                ret_list.append(d)
+            record['details'] = ret_list
 
         return json.dumps(record)
 
@@ -82,42 +94,51 @@ class Database(object):
         db = self.client['TMS_DB']
         db = db['templates']
         ret_list = []
-        print(keyword)
         docs = db.find({
-            'name': {'$regex': keyword},
-            'is_activated' : True
+            'name': {'$regex': keyword}
         })
         for x in docs:
-            ret_list.append(x)
             x['_id'] = str(x['_id'])
             x['origin_id'] = str(x['origin_id'])
+            x['versions'] = None
+            x['activated_version'] = str(x['activated_version'])
             x['created_at'] = str(x['created_at'])
+            ret_list.append(x)
+
         return json.dumps(ret_list)
 
     def get_versions(self, origin_id):
         db = self.client['TMS_DB']
         db = db['templates']
+        query = db.find(
+            {'_id': ObjectId(origin_id)}, 
+            {'_id': 0, 'versions': 1}
+        )
         ret_list = []
-        for x in db.find({'origin_id': ObjectId(origin_id)}):
-            ret_list.append(x)
-            x['_id'] = str(x['_id'])
-            x['origin_id'] = str(x['origin_id'])
-            x['created_at'] = str(x['created_at'])
-        return json.dumps(ret_list)
+        for result in query:
+            for version in result['versions']:
+                if version['is_deleted']:
+                    continue
+                version['origin_id'] = str(version['origin_id'])
+                version['version_id'] = str(version['version_id'])
+                version['created_at'] = str(version['created_at'])
+                ret_list.append(version)
+        return json.dumps(ret_list) 
 
     def activate_version(self, origin_id, version_id):
         db = self.client['TMS_DB']
         db = db['templates']
-        db.update_many({
-            'origin_id': ObjectId(origin_id)
-            },{'$set': {
-                'is_activated': False
-            }})
-        db.update_one({
-            '_id': ObjectId(version_id) 
-            },{'$set': {
-                'is_activated': True
-            }})
+        db.update({ 
+            "_id": ObjectId(origin_id), 
+            "versions.is_activated": True},
+           {"$set": {"versions.$.is_activated": False}}
+        )
+        db.update({
+            "_id": ObjectId(origin_id), 
+            "versions.version_id": version_id},
+           {"$set": {"versions.$.is_activated": True}}
+        )
+        db.update({"_id": ObjectId(origin_id)}, {"$set": {"activated_version": ObjectId(version_id)}}) # serialize?
         return json.dumps({"message": "update succesful"})
 
     def delete_version(self, origin_id, version_id):
@@ -125,60 +146,75 @@ class Database(object):
         db = db['templates']
         target = db.find_one({
             '_id': ObjectId(version_id)
-            })
+        })
         if target and target['is_activated'] == True:
             db.update_one({
                 '_id': ObjectId(origin_id) 
-                },{'$set': {
+            },{'$set': {
                     'is_activated': True
-                }})
+            }})
         db.delete_one({
             '_id': ObjectId(version_id)
-            })
+        })
         return json.dumps({"message": "deletion succesful"})
 
-    def create_template(self, name, file_name, tags, description, origin_id = None):
+
+    def update_template(self, template):
         db = self.client['TMS_DB']
         db = db['templates']
-        values = {}
-        values['name'] = name
-        values['file_name'] = file_name
-        values['tags'] = tags
-        values['description'] = description
-        values['is_activated'] = True
-        values['is_deleted'] = False
-        values['created_at'] = datetime.now()
-        if origin_id:
-            test = db.update_many({
-                        'origin_id': ObjectId(origin_id)
-                    }, {'$set': {
-                        'is_activated': False
-                    }})
-        create_result = db.insert_one(values)
-        origin_id = create_result.inserted_id if not origin_id else origin_id
-        print('Template', create_result.inserted_id, 'created')
-        update_result = db.update_one(
-                {
-                    '_id': ObjectId(create_result.inserted_id)
-                }, {'$set': {
-                    'origin_id': ObjectId(origin_id)
-                }})
-        return update_result
+        del(template._id)
+        db.replace_one(
+            { '_id': ObjectId(template.origin_id) },
+            template.serialize()
+        )
+        return True
 
+    def create_template(self, template, filename = None):
+        # Version shouldn't be created here, but for now I'm going to do it.
+        db = self.client['TMS_DB']
+        db = db['templates']
+        create_result = db.insert_one(template.serialize())
+        origin_id = create_result.inserted_id
+        new_version = {
+            "name": template.name,
+            "filename": filename,
+            "is_activated": True,
+            "is_deleted": False,
+            "origin_id": ObjectId(create_result.inserted_id),
+            "version_id": ObjectId(create_result.inserted_id),
+            "created_at": datetime.now()
+        }
+        resp = db.update_one(
+            {
+                '_id': ObjectId(create_result.inserted_id)
+            }, 
+            {
+                '$set': {
+                    'activated_version': ObjectId(origin_id),
+                    'origin_id': ObjectId(origin_id) 
+                },
+                '$push': {
+                    'versions': new_version
+                }
+            }
+        )
+        return {"msg": "template created succesfully"}
+ 
     def create_region(self, name):
         # TODO Check if a region exist or if u should drop it
         db = self.client['TMS_DB']
+
         db = db['regions']
 
-
-        if (db.find_one({ 'name': name })):
             ## Delete duplicate values
+        if (db.find_one({ 'name': name })):
+        
             db.delete_many({ 'name': name})
         
-        
         values = {}
-        values['name'] = name
-        values['templates'] = []
         values['deployment_task_ids'] = []
+        values['templates'] = []
+        values['name'] = name
+
         ret = db.insert_one(values)
         return ret

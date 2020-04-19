@@ -134,3 +134,5 @@ backend/files/
 /.vscode
 
 *.swo
+
+.devcontainer/
