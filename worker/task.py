@@ -7,19 +7,26 @@ import config
 
 import ml_templates
 
+# Tasks are the building blocks of Celery distributed computing
+
+# This is the callback class for every task that is initiated, it contains code for tasks that succeed and tasks that fail
 class CallbackTask(Task):
+    # connecting to the database
     def __init__(self):
         self.db = MongoClient("mongodb://application_user:application_user_pass@mongo_result_backend:27017/?authSource=TMS_DB", connect=False)['TMS_DB']
-        
+    
+    # code that will execute when tasks succeed
     def on_success(self, retval, task_id, args, kwargs):
         
+        # update the jobs database to set the status to success
         self.db['jobs'].update_one(
             { 'task_id' : task_id },
             { '$set': { 'status' : 'SUCCESS' }}
         )
-    
+        # finding the template origin id
         template_origin_id = self.db['templates'].find_one({'_id' : ObjectId(args[0])})['origin_id']
 
+        # counting the number of times the template id is in the regions database
         counter = self.db['regions'].find(
             {
                 'name' : args[1],
@@ -30,6 +37,7 @@ class CallbackTask(Task):
         print("HAHA", counter.count())
         # Case 1 : This template is new to the region
         if counter.count() < 1:
+            # updating the regions database with the necessary information
             update_result = self.db['regions'].update_one(
                 {'name' : args[1]},
                 {
@@ -61,7 +69,7 @@ class CallbackTask(Task):
             )
 
 
-
+    # code that executes on failure
     def on_failure(self, exc, task_id, args, kwargs, einfo):
 
         self.db['jobs'].update_one(
@@ -73,6 +81,7 @@ class CallbackTask(Task):
 app = Celery('task')
 app.config_from_object(config)
 
+# different callback functions for each task
 @app.task(base=CallbackTask)
 def add(x, y):
     print(x)
@@ -96,6 +105,8 @@ def create_deployment(template_id, region_id):
     time.sleep(10)
     print("We will deploy template",template_id, "to reigon", region_id)
     return 0
-
+    
+# sample machine learning model function
+@app.task(base=CallbackTask)
 def runModel():
     print(ml_templates.train_model('./ml_templates/titanic_test.csv','./ml_templates/titanic_train.csv'))
