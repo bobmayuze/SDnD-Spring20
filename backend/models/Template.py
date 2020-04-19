@@ -36,7 +36,11 @@ class Template(AbstractModel):
 
     def activate_version(self, version_id):
         for v in self.versions:
+            v.is_activated = False
+
+        for v in self.versions:
             if v.version_id == version_id:
+                v.is_activated = True
                 self.activated_version = version_id
                 self.activated_name = v.name
                 return True
