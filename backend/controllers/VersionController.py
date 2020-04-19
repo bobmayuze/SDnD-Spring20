@@ -1,3 +1,7 @@
+"""
+Version controller handles all the traffic regarding versions
+"""
+
 from flask import Blueprint, render_template, abort, request, Response
 from database import Database
 from models.Template import Template
@@ -9,12 +13,18 @@ version_controller = Blueprint('version_controller', __name__, template_folder='
 
 @version_controller.route("/versions", methods=["GET"])
 def get_versions():
+    """
+    Return the versions of a template given the origin_id of the template
+    """
     origin_id = request.args.get("origin_id")
     resp = Response(response=db.get_versions(origin_id), status=200, mimetype="version_controllerlication/json")
     return resp  
 
 @version_controller.route("/versions", methods=["POST"])
 def create_version():
+    """
+    Create a new version given the origin_id of the parent template.
+    """
     origin_id = request.form.get("origin_id")
     name = request.form.get("name")
     f = request.files["files"]
@@ -28,7 +38,10 @@ def create_version():
 
 @version_controller.route("/versions", methods=["PUT"])
 def activate_version():
-    # TODO: Get Version Object
+    """
+    Activate a version of a template given the origin_id of the template, and the version_id
+    of the version
+    """
     req_json = request.get_json()
     origin_id = req_json['origin_id']
     version_id = req_json['version_id'] 
@@ -39,7 +52,10 @@ def activate_version():
 
 @version_controller.route("/versions", methods=["DELETE"])
 def delete_version():
-    # TODO: Get Versoin Object
+    """
+    Delete a version of a template given the origin_id of the template, and the version_id
+    of the version
+    """
     req_json = request.get_json()
     origin_id = req_json['origin_id'] 
     version_id = req_json['version_id']
