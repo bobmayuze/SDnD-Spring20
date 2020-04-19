@@ -7,7 +7,7 @@ import config
 
 import ml_templates
 
-# Tasks are the building blocks of Celery distributed computing
+# Tasks are the building blocks of Celery distributed computing, A worker is created through this factory
 
 # This is the callback class for every task that is initiated, it contains code for tasks that succeed and tasks that fail
 class CallbackTask(Task):
