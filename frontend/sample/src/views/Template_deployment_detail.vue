@@ -11,15 +11,15 @@
 
     <br />
     <a-form-item v-bind="formItemLayout" label="Target Region">
-      <h2>{{template_info.target_region}}</h2>
+      <p>{{template_info.target_region}}</p>
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Created At">
-      <h2>{{template_info.create_time}}</h2>
+      <p>{{template_info.create_time}}</p>
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Status">
-      <h2>{{template_info.status}}</h2>
+      <p>{{template_info.status}}</p>
     </a-form-item>
 
     <br />
@@ -45,7 +45,8 @@
 import axios from "axios";
 export default {
   mounted() {
-    this.fetch(this.$route.query.job_id, this);
+    this.fetch(this.$route.query.task_id, this);
+    console.log("detail page check", this.$route.query.task_id);
   },
   data() {
     return {
@@ -59,17 +60,25 @@ export default {
   methods: {
     // GET methods, endpoint: jobs
     // Get the deplyment jobs list
-    fetch(job_id, element) {
-      console.log("Feting detail for", job_id);
+    fetch(task_id, element) {
+      console.log("Feting detail for", task_id);
       const url = "http://localhost:5000/jobs";
       axios
         .get(url, {
           params: {
-            job_id: job_id
+            'job_id': task_id
           }
         })
         .then(function(response) {
+          console.log(response.data);
           element.template_info = response.data;
+          element.template_info.map(record=>{
+              if (record.task_id == task_id) {
+                element.template_info.target_region = record.target_region
+                element.template_info.create_time = record.create_time
+                element.template_info.status = record.status
+              }
+          })
         })
         .catch(function(error) {
           console.log(error);

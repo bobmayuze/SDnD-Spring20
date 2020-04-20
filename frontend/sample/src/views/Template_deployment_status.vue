@@ -1,55 +1,45 @@
 <!-- This page display the deployment status of a template -->
 <template>
-    <a-form id="components-form-demo-validate-other">
-        <a-row>
-            <a-col :span="6"></a-col>
-            <h1>Template Deployment Status</h1>
-        </a-row>
+  <a-form id="components-form-demo-validate-other">
+    <a-row>
+      <a-col :span="6"></a-col>
+      <h1>Template Deployment Status</h1>
+    </a-row>
 
-        <br/>
-        <br/>
-        <br/>
+    <br />
+    <br />
+    <br />
 
-        <a-row>
-            <a-col :span="6"/>
-            <a-col :span="8">
-            <a-list :grid="{ gutter: 6, column: 3 }" :dataSource="available_regions">
-                <a-list-item slot="renderItem" slot-scope="item">
-                    <div v-if="item.task_id">
-                        <a-button type="primary" @click="buttonClieked(item.task_id)">{{item.name}}</a-button>
-                    </div>
-                    <div v-else>
-                        <a-button type="primary" @click="buttonClieked(item.task_id)" disabled>{{item.name}}</a-button>
-                    </div>
-                    
-                </a-list-item>
-            </a-list>
-            </a-col>
-            <a-col :span="6"></a-col>
-            <a-col :span="6"></a-col>         
-        </a-row>        
-        
-        <br/>
-        <br/>
-        <br/>
-                
-        <a-row>
-            <a-col :span="6"/>
+    <a-row>
+      <a-col :span="6" />
+      <a-col :span="8">
+        <a-list :grid="{ gutter: 6, column: 3 }" :dataSource="available_regions">
+          <a-list-item slot="renderItem" slot-scope="item">
+            <div v-if="item.task_id">
+              <a-button type="primary" @click="buttonClieked(item.task_id)">{{item.name}}</a-button>
+            </div>
+            <div v-else>
+              <a-button type="primary" @click="buttonClieked(item.task_id)" disabled>{{item.name}}</a-button>
+            </div>
+          </a-list-item>
+        </a-list>
+      </a-col>
+      <a-col :span="6"></a-col>
+      <a-col :span="6"></a-col>
+    </a-row>
 
-            <a-col :span="6">
-                <a-button 
-                    type="primary" 
-                    html-type="button"
-                    v-on:click="$router.go(-1)"
-                >
-                    Go Back
-                </a-button>
-            </a-col>            
-            
-        </a-row>        
+    <br />
+    <br />
+    <br />
 
-    </a-form>
+    <a-row>
+      <a-col :span="6" />
 
+      <a-col :span="6">
+        <a-button type="primary" html-type="button" v-on:click="$router.go(-1)">Go Back</a-button>
+      </a-col>
+    </a-row>
+  </a-form>
 </template>
 
 
@@ -57,14 +47,14 @@
 import axios from 'axios';
 
 // Data center location list
-let available_regions = [
-    {'name' : 'Hangzhou'},
-    {'name' : 'Beijing'},
-    {'name' : 'Shanghai'},
-    {'name' : 'Hongkong'},
-    {'name' : 'German'},
-    {'name' : 'Sydney'}
-]
+// let available_regions = [
+//     {'name' : 'Hangzhou'},
+//     {'name' : 'Beijing'},
+//     {'name' : 'Shanghai'},
+//     {'name' : 'Hongkong'},
+//     {'name' : 'German'},
+//     {'name' : 'Sydney'}
+// ]
 
 export default {
     mounted() {
@@ -72,7 +62,14 @@ export default {
     },
     data() {
         return {
-            available_regions,
+            available_regions: [
+                                    {'name' : 'Hangzhou'},
+                                    {'name' : 'Beijing'},
+                                    {'name' : 'Shanghai'},
+                                    {'name' : 'Hongkong'},
+                                    {'name' : 'German'},
+                                    {'name' : 'Sydney'}
+                                ],
             template_info : 'SOME INFO',
             formItemLayout: {
                 labelCol: { span: 6 },
@@ -85,17 +82,18 @@ export default {
         // display the activated version template deployment status
         fetch(origin_id, element){
             console.log('Feting detail for', origin_id);
-            const url = 'http://localhost:5000/versions'
+            const url = 'http://localhost:5000/templates'
             axios.get(url, {
                 params: {
-                    'origin_id' : origin_id
+                    'template_id': origin_id,
+                    'deployed_regions_required': 'True'
                 }
             })
             .then(function (response) {
-                element.template_info = response.data.result
+                // console.log("Got sth here", response);
+                element.template_info = response.data.details;
                 console.log(element.template_info);
-                response.data.result.map(record => {
-                    // console.log(record);
+                response.data.details.map(record => {
                     element.available_regions.map(region => {
                         if (region.name == record.region) {
                             region.task_id = record.task_id
@@ -112,7 +110,7 @@ export default {
         buttonClieked(info){
             console.log('Clicked',info);
             this.$router.push({
-                path: `/templates/deployment_detail/?job_id=${info}`
+                path: `/templates/deployment_detail/?task_id=${info}`
             })            
         },
     }
