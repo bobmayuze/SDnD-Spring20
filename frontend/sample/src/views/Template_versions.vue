@@ -89,15 +89,16 @@ export default {
     handleTableChange(pagination, filters, sorter) {
       console.log(pagination);
     },
-    activate_version(record) {// activate other version template
-      console.log("Activating", record);// endpoint: versions, method: put
+    activate_version(record) {
+      // activate other version template
+      console.log("Activating", record); // endpoint: versions, method: put
       const activate_url = "http://localhost:5000/versions";
       axios({
         method: "put",
         url: activate_url,
         data: {
-          'origin_id': record.origin_id,
-          'version_id': record.version_id
+          origin_id: record.origin_id,
+          version_id: record.version_id
         }
       })
         .then(function(response) {
@@ -108,14 +109,15 @@ export default {
           console.log(error);
         });
     },
-    delete_version(record) {// delete a certain version in the database
-      console.log("Deleting", record);// endpoint: versions, method: delete
+    delete_version(record) {
+      // delete a certain version in the database
+      console.log("Deleting", record); // endpoint: versions, method: delete
       const delete_url = "http://localhost:5000/versions";
       axios
         .delete(delete_url, {
           data: {
-            'origin_id': record.origin_id,
-            'version_id': record.version_id
+            origin_id: record.origin_id,
+            version_id: record.version_id
           }
         })
         .then(function(response) {
@@ -126,11 +128,13 @@ export default {
           console.log(error);
         });
     },
-    fetch(params = {}) {// get the version list of a template
+    fetch(params = {}) {
+      // get the version list of a template
       console.log("fetch triggered", this.$route.query.origin_id);
 
       this.loading = true;
-      reqwest({// endpoint: versions, method: get
+      reqwest({
+        // endpoint: versions, method: get
         url: "http://localhost:5000/versions",
         method: "get",
         data: {

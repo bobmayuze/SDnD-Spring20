@@ -66,19 +66,19 @@ export default {
       axios
         .get(url, {
           params: {
-            'job_id': task_id
+            job_id: task_id
           }
         })
         .then(function(response) {
           console.log(response.data);
           element.template_info = response.data;
-          element.template_info.map(record=>{
-              if (record.task_id == task_id) {
-                element.template_info.target_region = record.target_region
-                element.template_info.create_time = record.create_time
-                element.template_info.status = record.status
-              }
-          })
+          element.template_info.map(record => {
+            if (record.task_id == task_id) {
+              element.template_info.target_region = record.target_region;
+              element.template_info.create_time = record.create_time;
+              element.template_info.status = record.status;
+            }
+          });
         })
         .catch(function(error) {
           console.log(error);
