@@ -53,9 +53,6 @@ class deployment_job_service(object):
         '''
         Create a deployment job
         '''
-        # task = self.app.send_task(
-        #     'tasks.create_deployment', [template_id, region_id],
-        #     queue=target_queue)
 
         task = self.app.send_task(
             'task.add', [template_id, region_id],
