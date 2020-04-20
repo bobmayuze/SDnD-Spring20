@@ -16,46 +16,6 @@
 <script>
 import axios from "axios";
 
-// Data center location list
-let available_regions = [
-  {
-    name: "Hangzhou",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  },
-  {
-    name: "Beijing",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  },
-  {
-    name: "Shanghai",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  },
-  {
-    name: "Hongkong",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  },
-  {
-    name: "German",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  },
-  {
-    name: "Sydney",
-    deployment_status: "",
-    created_time: "",
-    task_status: ""
-  }
-];
-
 const columns = [
   {
     dataIndex: "name",
