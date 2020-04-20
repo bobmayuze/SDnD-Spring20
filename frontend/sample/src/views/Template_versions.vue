@@ -1,3 +1,4 @@
+<!-- This page display the version list of a template -->
 <template>
   <div class="Templates">
     <h1>Template Versions</h1>
@@ -40,6 +41,7 @@
 import reqwest from "reqwest";
 import axios from "axios";
 
+// set up the display table values
 const columns = [
   {
     title: "Version Id",
@@ -88,14 +90,15 @@ export default {
       console.log(pagination);
     },
     activate_version(record) {
-      console.log("Activating", record);
+      // activate other version template
+      console.log("Activating", record); // endpoint: versions, method: put
       const activate_url = "http://localhost:5000/versions";
       axios({
         method: "put",
         url: activate_url,
         data: {
-          'origin_id': record.origin_id,
-          'version_id': record.version_id
+          origin_id: record.origin_id,
+          version_id: record.version_id
         }
       })
         .then(function(response) {
@@ -107,13 +110,14 @@ export default {
         });
     },
     delete_version(record) {
-      console.log("Deleting", record);
+      // delete a certain version in the database
+      console.log("Deleting", record); // endpoint: versions, method: delete
       const delete_url = "http://localhost:5000/versions";
       axios
         .delete(delete_url, {
           data: {
-            'origin_id': record.origin_id,
-            'version_id': record.version_id
+            origin_id: record.origin_id,
+            version_id: record.version_id
           }
         })
         .then(function(response) {
@@ -125,10 +129,12 @@ export default {
         });
     },
     fetch(params = {}) {
+      // get the version list of a template
       console.log("fetch triggered", this.$route.query.origin_id);
 
       this.loading = true;
       reqwest({
+        // endpoint: versions, method: get
         url: "http://localhost:5000/versions",
         method: "get",
         data: {
