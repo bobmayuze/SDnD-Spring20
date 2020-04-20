@@ -1,3 +1,6 @@
+"""
+Handles the traffic for all traffic regarding template
+"""
 from flask import Blueprint, render_template, abort, request, Response
 from database import Database 
 from models.Template import Template
@@ -8,6 +11,11 @@ db = Database()
 
 @template_controller.route("/templates", methods=["GET"])
 def get_template():
+    """
+    Gets the template given template_id
+    If key_word is present, will return all templates that matches the given keyword
+    If deployed_regions_required is present, give the status of regions 
+    """
     template_id = request.args.get("template_id")
     keyword = request.args.get("key_word")
     deployed_regions_required = request.args.get("deployed_regions_required")
@@ -25,6 +33,9 @@ def get_template():
 
 @template_controller.route("/templates", methods=["POST"])
 def create_template():
+    """
+    Create the initial template and version of given all the metadata of a template
+    """
     f = request.files["files"]
     name = request.form.get("name")
     filename = f.filename

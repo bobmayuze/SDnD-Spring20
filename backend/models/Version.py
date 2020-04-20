@@ -1,3 +1,7 @@
+"""
+Model for a version
+Contains metadata for a specific version
+"""
 from bson.objectid import ObjectId
 import copy
 import json
@@ -20,6 +24,9 @@ class Version(AbstractModel):
         return self.origin_id
 
     def serialize(self):
+        """
+        Seralize a version for storing in DB
+        """
         clone = copy.copy(self)
         clone.origin_id = ObjectId(clone.origin_id)
         clone.version_id = ObjectId(clone.version_id)
@@ -27,4 +34,7 @@ class Version(AbstractModel):
 
     @staticmethod
     def getVersion(template_id):
+        """
+        Factory method for getting a version. Not needed as of now
+        """
         pass

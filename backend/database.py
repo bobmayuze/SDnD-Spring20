@@ -1,3 +1,6 @@
+"""
+database.py contains all the database calls to MongoDB
+"""
 import pymongo
 from datetime import datetime
 import json
@@ -44,6 +47,9 @@ class Database(object):
         return json.dumps(toReturn)
 
     def get_templates(self):
+        """
+        Returns all templates in DB
+        """
         db = self.client['TMS_DB']
         db = db['templates']
 
@@ -58,6 +64,10 @@ class Database(object):
         return json.dumps(toReturn)
 
     def get_single_template_by_id(self, unique_id, regions_required = False):
+        """
+        Return a single template, given its unique_id.
+        If regions_required is present, return all of its deployed region status
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         record = db.find_one({'_id': ObjectId(unique_id)})
@@ -91,6 +101,9 @@ class Database(object):
         return json.dumps(record)
 
     def get_templates_by_keyword(self, keyword):
+        """
+        Return a list of templates with tag matching the keyword
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         ret_list = []
@@ -108,6 +121,9 @@ class Database(object):
         return json.dumps(ret_list)
 
     def get_versions(self, origin_id):
+        """
+        Get all of versions of a template given its origin_id
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         query = db.find(
@@ -126,6 +142,9 @@ class Database(object):
         return json.dumps(ret_list) 
 
     def activate_version(self, origin_id, version_id):
+        """
+        Activate a version given its parent template's origin_id and its version_id
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         db.update({ 
@@ -142,6 +161,9 @@ class Database(object):
         return json.dumps({"message": "update succesful"})
 
     def delete_version(self, origin_id, version_id):
+        """
+        Delete a version given its parent's origen_id and its version_id
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         target = db.find_one({
@@ -160,6 +182,9 @@ class Database(object):
 
 
     def update_template(self, template):
+        """
+        update a template in DB given a template Object
+        """
         db = self.client['TMS_DB']
         db = db['templates']
         del(template._id)
@@ -170,6 +195,9 @@ class Database(object):
         return True
 
     def create_template(self, template, filename = None):
+        """
+        Create a template and its metadata given a template object
+        """
         # Version shouldn't be created here, but for now I'm going to do it.
         db = self.client['TMS_DB']
         db = db['templates']
