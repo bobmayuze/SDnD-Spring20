@@ -90,7 +90,7 @@ export default {
       ],
       columns,
       template_info: "SOME INFO",
-      task_infor: "SOME INFO"
+      task_info: "SOME INFO"
     };
   },
   methods: {
@@ -116,7 +116,6 @@ export default {
             element.data.map(region => {
               if (region.name == record.region) {
                 // Query the deployment task
-                region.deployment_status = "YES";
                 const task_url = "http://localhost:5000/jobs";
                 axios
                   .get(task_url, {
@@ -128,9 +127,15 @@ export default {
                     console.log("second query", response.data);
                     element.task_info = response.data;
                     element.task_info.map(task => {
-                      if (task.task_id == task.task_id) {
+                      if (
+                        record.origin_id == task.name &&
+                        task.status == "SUCCESS" &&
+                        task.target_region == region.name
+                      ) {
+                        console.log(region.name, task.status);
                         region.created_time = task.create_time;
                         region.task_status = task.status;
+                        region.deployment_status = "YES";
                       }
                     });
                   })
