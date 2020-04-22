@@ -90,7 +90,7 @@ export default {
       ],
       columns,
       template_info: "SOME INFO",
-      task_infor: "SOME INFO"
+      task_info: "SOME INFO"
     };
   },
   methods: {
@@ -106,40 +106,21 @@ export default {
             deployed_regions_required: "True"
           }
         })
-        .then(function(response) {
+        .then((response) => {
+          console.log('here', response.data.details);
+          let deployment_tasks_status = response.data.details;
           element.data.map(region => {
-            region.deployment_status = "NO";
-          });
-          element.template_info = response.data.details;
-          console.log("Got sth fron query", element.template_info);
-          element.template_info.map(record => {
-            element.data.map(region => {
-              if (region.name == record.region) {
-                // Query the deployment task
-                region.deployment_status = "YES";
-                const task_url = "http://localhost:5000/jobs";
-                axios
-                  .get(task_url, {
-                    params: {
-                      job_id: record.task_id
-                    }
-                  })
-                  .then(function(response) {
-                    console.log("second query", response.data);
-                    element.task_info = response.data;
-                    element.task_info.map(task => {
-                      if (task.task_id == task.task_id) {
-                        region.created_time = task.create_time;
-                        region.task_status = task.status;
-                      }
-                    });
-                  })
-                  .catch(function(error) {
-                    console.log(error);
-                  });
+            deployment_tasks_status.map(regional_task => {
+              
+              if( region.name == regional_task.region){
+                console.log(region.name, regional_task);
+                region.task_status = regional_task.status;
+                region.deployment_status = (regional_task.status == 'SUCCESS') ? 'YES' : 'NO';
+                region.created_time = regional_task.create_time;
               }
-            });
-          });
+              
+            })
+          })
         })
         .catch(function(error) {
           console.log(error);
