@@ -3,7 +3,7 @@
     <a-layout id="components-layout-demo-custom-trigger">
       <a-layout-sider :trigger="null" collapsible v-model="collapsed">
         <div class="logo">
-          <h1>CMS</h1>
+          <h1>ML-TMS</h1>
         </div>
 
         <a-menu theme="dark" mode="inline">
@@ -74,7 +74,7 @@
   }
   #components-layout-demo-custom-trigger .logo {
     height: 32px;
-    background: rgba(255, 255, 255, 0.2);
+    /* background: rgba(255, 255, 255, 0.2); */
     margin: 16px;
   }
   #components-layout-demo-custom-trigger .logo h1 {
